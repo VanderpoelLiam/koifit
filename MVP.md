@@ -341,10 +341,68 @@ Health check endpoint.
 
 ## Seed Data
 
-The MVP requires pre-seeded data for:
-- Exercises (with names, min_increment values, and notes)
-- Days
-- Slots within each day (with exercise references, set counts, rep targets, rest times)
+### Exercises
 
-Seed data format and content to be defined separately.
+| Name | min_increment | notes |
+|------|---------------|-------|
+| Flat DB Press | 2.5 | Tuck chin a little |
+| Seated DB Shoulder Press | 2.5 | 75-85° bench angle. Bring dumbbells all the way down |
+| 2-Grip Lat Pulldown | 2.5 | Use lat bar then easy grip bar. Pull to chest |
+| Seated Cable Row | 2.5 | Squeeze shoulder blades |
+| Hack Squat | 2.5 | Foot rest mid position, top all way flat, safety 6. Control weight on way down |
+| Overhead Cable Triceps Extension | 2.5 | Both arms at once, resist the negative |
+| EZ Bar Curl | 1.25 | Arc bar 'out' not 'up', squeeze biceps |
+| Lying Hamstring Curl | 2.5 | Legs at 3, circle at 2 |
+| Pendlay Row | 2.5 | Squeeze shoulder blades, pull to lower chest |
+| Machine Shoulder Press | 2.5 | Smooth controlled tension, no stopping |
+| Weighted Pullup | 1.25 | Pull elbows down and in, minimize swinging |
+| Cable Chest Press | 2.5 | Squeeze chest |
+| DB Lateral Raise | 1.25 | Raise 'out' not 'up' |
+| Romanian Deadlift | 2.5 | Neutral lower back, hips back, no rounding |
+| Leg Press | 5.0 | Foot above middle so heel doesn't raise in bottom. Safety 3, back mid hole |
+| DB Incline Curl | 1.25 | 38° bench angle. Keep shoulders back as you curl |
+| Triceps Pressdown | 2.5 | Squeeze triceps to move weight |
+| Leg Extension | 2.5 | Squeeze quads |
+
+### Days & Slots
+
+#### Day 1: Upper 1
+
+| ordinal | title | exercise | warmup_sets | working_sets | rep_target | rest_min | rpe | dropset |
+|---------|-------|----------|-------------|--------------|------------|----------|-----|---------|
+| 1 | Flat DB Press (Heavy) | Flat DB Press | 2-3 | 1 | 4-6 | 3.0 | 8-9 | 0 |
+| 2 | Flat DB Press (Back off) | Flat DB Press | 0 | 1 | 8-10 | 3.0 | 9-10 | 0 |
+| 3 | Seated DB Shoulder Press | Seated DB Shoulder Press | 1 | 2 | 10-12 | 2.0 | 9-10 | 0 |
+| 4 | 2-Grip Lat Pulldown | 2-Grip Lat Pulldown | 2 | 2 | 10-12 | 2.0 | 9-10 | 0 |
+| 5 | Seated Cable Row | Seated Cable Row | 1 | 2 | 10-12 | 2.0 | 9-10 | 1 |
+
+#### Day 2: Lower 1
+
+| ordinal | title | exercise | warmup_sets | working_sets | rep_target | rest_min | rpe | dropset |
+|---------|-------|----------|-------------|--------------|------------|----------|-----|---------|
+| 1 | Hack Squat (Heavy) | Hack Squat | 2-3 | 1 | 4-6 | 3.0 | 8-9 | 0 |
+| 2 | Hack Squat (Back off) | Hack Squat | 0 | 1 | 8-10 | 3.0 | 8-9 | 0 |
+| 3 | Overhead Cable Triceps Extension | Overhead Cable Triceps Extension | 1 | 2 | 12-15 | 1.5 | 10 | 0 |
+| 4 | EZ Bar Curl | EZ Bar Curl | 1 | 2 | 12-15 | 1.5 | 10 | 0 |
+| 5 | Lying Hamstring Curl | Lying Hamstring Curl | 1 | 1 | 10-12 | 1.5 | 10 | 1 |
+
+#### Day 3: Upper 2
+
+| ordinal | title | exercise | warmup_sets | working_sets | rep_target | rest_min | rpe | dropset |
+|---------|-------|----------|-------------|--------------|------------|----------|-----|---------|
+| 1 | Pendlay Row | Pendlay Row | 2 | 2 | 8-10 | 2.0 | 9-10 | 0 |
+| 2 | Machine Shoulder Press | Machine Shoulder Press | 2 | 2 | 10-12 | 2.0 | 9-10 | 0 |
+| 3 | Weighted Pullup | Weighted Pullup | 1 | 2 | 8-10 | 2.0 | 9-10 | 0 |
+| 4 | Cable Chest Press | Cable Chest Press | 2 | 2 | 10-12 | 2.0 | 9-10 | 1 |
+| 5 | DB Lateral Raise | DB Lateral Raise | 1 | 1 | 12-15 | 1.5 | 10 | 1 |
+
+#### Day 4: Lower 2
+
+| ordinal | title | exercise | warmup_sets | working_sets | rep_target | rest_min | rpe | dropset |
+|---------|-------|----------|-------------|--------------|------------|----------|-----|---------|
+| 1 | Romanian Deadlift | Romanian Deadlift | 2 | 2 | 10-12 | 2.0 | 8-9 | 0 |
+| 2 | Leg Press | Leg Press | 2 | 3 | 10-12 | 2.0 | 8-9 | 0 |
+| 3 | DB Incline Curl | DB Incline Curl | 1 | 2 | 12-15 | 1.5 | 10 | 0 |
+| 4 | Triceps Pressdown | Triceps Pressdown | 1 | 2 | 12-15 | 1.5 | 10 | 0 |
+| 5 | Leg Extension | Leg Extension | 1 | 1 | 10-12 | 1.5 | 9-10 | 1 |
 
