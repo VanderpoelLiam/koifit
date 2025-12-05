@@ -95,6 +95,72 @@ button {
   margin-right: 5px;
 }
 
+/* Mobile-optimized styles */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  input,
+  button,
+  textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    min-height: 44px; /* Touch target size */
+    padding: 12px !important;
+  }
+
+  button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
+  table input {
+    width: 100% !important;
+    min-width: 60px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+}
+
+/* Touch-friendly interactions */
+button,
+input[type="checkbox"],
+label {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  touch-action: manipulation;
+}
+
+input[type="number"],
+input[type="text"],
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Prevent text selection on buttons */
+button {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     color: #f6f6f6;
