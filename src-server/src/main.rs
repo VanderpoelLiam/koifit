@@ -17,12 +17,12 @@ struct AppState {
 #[tokio::main]
 async fn main() -> Result<()> {
     // Initialize database
-    let db = Arc::new(Mutex::new(Database::new("koifit.db")?));
+    let db = Arc::new(Mutex::new(Database::new("../koifit.db")?));
     
     let app_state = AppState { db };
 
     // Static file service with SPA fallback
-    let serve_dir = ServeDir::new("dist")
+    let serve_dir = ServeDir::new("../dist")
         .append_index_html_on_directories(true)
         .fallback(get(spa_fallback));
 
@@ -54,7 +54,7 @@ async fn health() -> Json<serde_json::Value> {
 }
 
 async fn spa_fallback() -> impl IntoResponse {
-    match std::fs::read_to_string("dist/index.html") {
+    match std::fs::read_to_string("../dist/index.html") {
         Ok(html) => Html(html).into_response(),
         Err(_) => (StatusCode::NOT_FOUND, "index.html not found").into_response(),
     }
