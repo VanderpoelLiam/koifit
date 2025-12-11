@@ -7,10 +7,10 @@ This document describes the core functionality and data model of the workout tra
 **In Scope:**
 - Pre-seeded exercises, days, and slots
 - Workout session tracking with auto-save
-- Exercise history viewing
 - Manual day selection
 
 **Out of Scope for MVP:**
+- Exercise history viewing
 - Rest timer (user times manually; `rest_minutes` shown for reference)
 - Slot substitution UI and table
 - Template table (single implicit template)
@@ -75,7 +75,7 @@ Links a session to a slot with the chosen exercise. Stores per-exercise metadata
 - `session_id` (INTEGER, NOT NULL, FOREIGN KEY) - References session
 - `slot_id` (INTEGER, NOT NULL, FOREIGN KEY) - References slot
 - `exercise_id` (INTEGER, NOT NULL, FOREIGN KEY) - References exercise (in MVP, always matches slot's preferred_exercise_id)
-- `effort_tag` (TEXT) - Effort indicator: "easy" (increase weight next time), "good" (keep weight), "hard" (decrease weight)
+- `effort_tag` (TEXT) - Effort indicator: "increase", "good" (keep weight), "decrease"
 - `next_time_note` (TEXT) - Optional notes for next time performing this exercise
 - `dropset_done` (INTEGER, NOT NULL, DEFAULT 0) - Whether dropset was completed (1) or not (0)
 
@@ -168,7 +168,7 @@ Session and set entry data is independent of day/slot structure. If the program 
 
 #### Exercise Display
 - Each exercise slot is displayed as a card/section
-- Shows slot title (clickable link to exercise history)
+- Shows slot title
 - Displays rep target and RPE range if specified
 - Shows rest time recommendation (e.g., "Rest: 2 min") from slot's `rest_minutes` for reference
 - Shows exercise notes if available (may include alternative exercise suggestions as text)
@@ -188,7 +188,7 @@ Session and set entry data is independent of day/slot structure. If the program 
 #### Working Sets Table
 - Displays a table with columns: Set Number, Weight (kg), Reps, Completion Checkbox
 - Number of rows = `working_sets_count` from slot
-- Weight input respects exercise's `min_increment` (step attribute)
+- Weight input allows manual entry (allows negative values)
 - Reps input accepts numeric values
 - Each set row has a completion checkbox
 
@@ -208,10 +208,10 @@ Session and set entry data is independent of day/slot structure. If the program 
 - Saved to `session_exercise.next_time_note`
 
 #### Effort Tags (Weight Change Indicators)
-- Two checkboxes: "-" (hard/decrease weight) and "+" (easy/increase weight)
+- Two checkboxes: "-" (decrease weight) and "+" (increase weight)
 - Mutually exclusive: checking one unchecks the other
 - Default state: neither checked = "good" (keep weight)
-- Values: "hard" (decrease), "good" (keep), "easy" (increase)
+- Values: "decrease", "good" (keep), "increase"
 - Saved to `session_exercise.effort_tag`
 - Used to guide weight adjustments for next session
 
@@ -224,6 +224,7 @@ Session and set entry data is independent of day/slot structure. If the program 
 - Payload includes: notes, effort_tag, dropset_done, sets array
 - Sets array contains: set_number, weight_kg, reps, is_done
 - Creates set_entry records if they don't exist, updates if they do
+- **Constraint**: Exercises with zero completed sets should not be permanently saved/counted in history. The backend or cleanup logic should handle removing/ignoring empty exercises on session finish.
 
 #### Finish Workout
 - Button fixed at bottom of screen
@@ -234,29 +235,7 @@ Session and set entry data is independent of day/slot structure. If the program 
 - Redirects to home page
 
 ### 4. Exercise History
-
-**Purpose**: View past performance for a specific exercise across all sessions.
-
-**Functionality**:
-- Accessible by clicking exercise name/title in session view
-- Shows exercise name and notes at top
-- Lists up to 50 most recent completed sessions for this exercise
-- For each session, displays:
-  - Date and day label
-  - All sets performed (set number, weight, reps)
-  - Notes from that session (if any)
-  - Effort tag (with visual indicator: blue for "easy", red for "hard", default for "good")
-  - Dropset completion status (if applicable)
-- Only shows finished sessions (`is_finished = 1`)
-- Ordered by date descending (most recent first)
-- Shows all sets for the exercise (including dropsets if `is_drop = 1`)
-
-**Data Flow**:
-1. Query `session_exercise` joined with `session` and `day` tables
-2. Filter by `exercise_id` and `is_finished = 1`
-3. Order by `session.date DESC`
-4. Limit to 50 results
-5. For each session exercise, fetch all set entries
+(Moved to Out of Scope for MVP)
 
 ## API Endpoints
 
@@ -281,9 +260,6 @@ Auto-save endpoint. Updates session exercise and set entries.
 Marks session as finished.
 - Returns: `{ status: "ok", redirect: "/" }`
 
-### GET `/exercises/<exercise_id>/history`
-Exercise history page. Shows past sessions for the exercise.
-
 ### GET `/health`
 Health check endpoint.
 
@@ -295,7 +271,7 @@ Health check endpoint.
 
 ### Weight Increments
 - Exercises have a `min_increment` value (e.g., 1.25, 2.5, 5.0 kg)
-- Input fields should respect this increment for validation/stepping
+- Input fields allow free text entry (can be negative)
 - Common values: 1.25 kg (small plates), 2.5 kg (standard), 5.0 kg (large plates)
 
 ### Set Numbering
@@ -309,10 +285,10 @@ Health check endpoint.
 - This prevents orphaned sessions and data loss
 
 ### Effort Tag Usage
-- "easy": Indicates user should increase weight next time
+- "increase": Indicates user should increase weight next time
 - "good": Indicates user should keep same weight next time (default)
-- "hard": Indicates user should decrease weight next time
-- These tags are displayed in exercise history for reference
+- "decrease": Indicates user should decrease weight next time
+- These tags are stored for reference in next session
 
 ## Data Validation
 
