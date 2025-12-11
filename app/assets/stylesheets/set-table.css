@@ -1,0 +1,101 @@
+@layer components {
+  .set-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-block-end: var(--space-md);
+  }
+
+  .set-table th,
+  .set-table td {
+    padding: var(--space-sm);
+    text-align: left;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .set-table th {
+    font-weight: 600;
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .set-table td {
+    vertical-align: middle;
+  }
+
+  .set-table__number {
+    width: 60px;
+    font-weight: 600;
+  }
+
+  .set-table__weight,
+  .set-table__reps {
+    width: 85px;
+  }
+
+  .set-table__weight input,
+  .set-table__reps input {
+    width: 100%;
+    text-align: center;
+    padding: var(--space-xs);
+    font-family: "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace;
+  }
+
+  .set-table__done {
+    width: 60px;
+    text-align: center;
+  }
+
+  .set-row {
+    transition: background-color var(--transition-fast);
+  }
+
+  .set-row:has(.set-done:checked) {
+    background-color: var(--color-border-subtle);
+  }
+
+  .set-row:has(.set-done:checked) .set-table__weight input,
+  .set-row:has(.set-done:checked) .set-table__reps input {
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  /* Mobile: stack table on very small screens */
+  @media (max-width: 360px) {
+    .set-table,
+    .set-table thead,
+    .set-table tbody,
+    .set-table th,
+    .set-table td,
+    .set-table tr {
+      display: block;
+    }
+
+    .set-table thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    .set-table tr {
+      margin-block-end: var(--space-sm);
+      padding: var(--space-sm);
+      background-color: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+    }
+
+    .set-table td {
+      border: none;
+      padding: var(--space-xs) 0;
+    }
+
+    .set-table td:before {
+      content: attr(data-label) ": ";
+      font-weight: 600;
+      display: inline-block;
+      width: 80px;
+    }
+  }
+}

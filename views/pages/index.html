@@ -1,0 +1,36 @@
+{% extends "layouts/application.html" %}
+
+{% block title %}Koifit - Home{% endblock %}
+
+{% block content %}
+<main class="app-main">
+    <div class="container">
+        {% if has_unfinished_session %}
+        <div class="stack stack-lg">
+            <h1>Resume Workout</h1>
+            <p class="text-quiet">You have an unfinished {{ day_label }} session.</p>
+            <a href="/sessions/{{ session_id }}" class="btn btn--primary" style="width: 100%;">
+                Resume {{ day_label }}
+            </a>
+            <a href="/days" class="btn btn--secondary" style="width: 100%;">
+                Start New Workout
+            </a>
+        </div>
+        {% else %}
+        <div class="stack stack-lg">
+            <h1>Start Workout</h1>
+            <p class="text-quiet">Select a workout day to begin.</p>
+            <div class="day-list">
+                {% for day in days %}
+                <form action="/sessions/start/{{ day.id }}" method="post">
+                    <button type="submit" class="day-item" style="width: 100%;">
+                        {{ day.label }}
+                    </button>
+                </form>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

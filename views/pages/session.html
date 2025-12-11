@@ -1,0 +1,166 @@
+{% extends "layouts/application.html" %}
+
+{% block title %}Koifit - {{ day.label }}{% endblock %}
+
+{% block content %}
+<main class="app-main">
+    <header class="session-header">
+        <h1>{{ day.label }}</h1>
+        <div class="date">{{ session.date }}</div>
+    </header>
+    
+    <div class="session-exercises">
+        {% for se in session_exercises %}
+        <div class="exercise-card card" data-session-exercise-id="{{ se.id }}">
+            <div class="exercise-card__header">
+                <h2 class="exercise-card__title">{{ se.slot.title }}</h2>
+                <div class="exercise-card__meta">
+                    <span>Reps: {{ se.slot.rep_target }}</span>
+                    {% if se.slot.rpe_range %}
+                    <span>RPE: {{ se.slot.rpe_range }}</span>
+                    {% endif %}
+                    <span>Rest: {{ se.slot.rest_minutes }} min</span>
+                </div>
+            </div>
+            
+            {% if se.slot.exercise_notes %}
+            <div class="exercise-card__notes">
+                {{ se.slot.exercise_notes }}
+            </div>
+            {% endif %}
+            
+            {% if se.previous %}
+            <div class="exercise-card__previous">
+                <div class="exercise-card__previous-header" onclick="this.nextElementSibling.hidden = !this.nextElementSibling.hidden">
+                    <span class="text-bold">Last time</span>
+                    <span>▼</span>
+                </div>
+                <div class="exercise-card__previous-content" hidden>
+                    {% if se.previous.next_time_note %}
+                    <p><strong>Notes:</strong> {{ se.previous.next_time_note }}</p>
+                    {% endif %}
+                    {% if se.previous.effort_tag %}
+                    <p><strong>Effort:</strong> {{ se.previous.effort_tag }}</p>
+                    {% endif %}
+                    {% if se.previous.sets %}
+                    <p><strong>Previous sets:</strong></p>
+                    <ul>
+                        {% for prev_set in se.previous.sets %}
+                        <li>Set {{ prev_set.set_number }}: {{ prev_set.weight_kg }}kg × {{ prev_set.reps }} reps</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if se.slot.warmup_sets != "0" %}
+            <div class="exercise-card__warmup">
+                <label class="checkbox-label">
+                    <input type="checkbox" class="checkbox" id="warmup-{{ se.id }}" />
+                    <span>{{ se.slot.warmup_sets }} warmup sets</span>
+                </label>
+            </div>
+            {% endif %}
+            
+            <div class="exercise-card__sets">
+                <table class="set-table">
+                    <thead>
+                        <tr>
+                            <th class="set-table__number">Set</th>
+                            <th class="set-table__weight">Weight (kg)</th>
+                            <th class="set-table__reps">Reps</th>
+                            <th class="set-table__done">Done</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for set_num in range(1, se.slot.working_sets_count + 1) %}
+                        {% set existing_set = se.sets | selectattr("set_number", "equalto", set_num) | first %}
+                        <tr class="set-row">
+                            <td class="set-table__number" data-label="Set">{{ set_num }}</td>
+                            <td class="set-table__weight" data-label="Weight (kg)">
+                                <input 
+                                    type="number" 
+                                    class="input set-weight" 
+                                    data-set-number="{{ set_num }}"
+                                    value="{% if existing_set %}{{ existing_set.weight_kg }}{% elif se.previous and se.previous.sets | length >= set_num %}{{ se.previous.sets[set_num - 1].weight_kg }}{% endif %}"
+                                    step="0.25"
+                                />
+                            </td>
+                            <td class="set-table__reps" data-label="Reps">
+                                <input 
+                                    type="number" 
+                                    class="input set-reps" 
+                                    data-set-number="{{ set_num }}"
+                                    value="{% if existing_set %}{{ existing_set.reps }}{% elif se.previous and se.previous.sets | length >= set_num %}{{ se.previous.sets[set_num - 1].reps }}{% endif %}"
+                                />
+                            </td>
+                            <td class="set-table__done" data-label="Done">
+                                <input 
+                                    type="checkbox" 
+                                    class="checkbox set-done" 
+                                    data-set-number="{{ set_num }}"
+                                    {% if existing_set and existing_set.is_done %}checked{% endif %}
+                                />
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            {% if se.slot.has_dropset %}
+            <div class="exercise-card__dropset">
+                <label class="checkbox-label">
+                    <input 
+                        type="checkbox" 
+                        class="checkbox dropset-done" 
+                        id="dropset-{{ se.id }}"
+                        {% if se.dropset_done %}checked{% endif %}
+                    />
+                    <span>Dropset completed</span>
+                </label>
+            </div>
+            {% endif %}
+            
+            <div class="exercise-card__notes-input">
+                <label for="notes-{{ se.id }}" class="sr-only">Notes for next time</label>
+                <textarea 
+                    class="textarea exercise-notes" 
+                    id="notes-{{ se.id }}"
+                    placeholder="Notes for next time..."
+                    rows="3"
+                >{{ se.next_time_note or "" }}</textarea>
+            </div>
+            
+            <div class="exercise-card__effort">
+                <label class="effort-tag effort-tag--increase">
+                    <input 
+                        type="checkbox" 
+                        class="checkbox effort-increase" 
+                        data-effort-tag="increase"
+                        {% if se.effort_tag == "increase" %}checked{% endif %}
+                    />
+                    <span>+ Increase</span>
+                </label>
+                <label class="effort-tag effort-tag--decrease">
+                    <input 
+                        type="checkbox" 
+                        class="checkbox effort-decrease" 
+                        data-effort-tag="decrease"
+                        {% if se.effort_tag == "decrease" %}checked{% endif %}
+                    />
+                    <span>- Decrease</span>
+                </label>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+<button class="btn btn--finish" id="finish-workout">Finish Workout</button>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="/assets/javascripts/session.js"></script>
+{% endblock %}

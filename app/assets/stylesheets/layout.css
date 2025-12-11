@@ -1,0 +1,29 @@
+@layer components {
+  .app-header {
+    padding: var(--space-md);
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .app-main {
+    padding-bottom: 80px; /* Space for fixed finish button */
+  }
+
+  .app-footer {
+    padding: var(--space-md);
+    background-color: var(--color-bg);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .container {
+    width: 100%;
+    max-width: 100vw;
+    padding: var(--space-md);
+  }
+
+  .container-narrow {
+    width: 100%;
+    max-width: 100vw;
+    padding: var(--space-sm);
+  }
+}

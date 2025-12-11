@@ -1,0 +1,38 @@
+@layer components {
+  .day-selector {
+    padding: var(--space-md);
+  }
+
+  .day-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .day-item {
+    display: block;
+    min-height: var(--touch-target);
+    padding: var(--space-lg);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    text-align: center;
+    color: var(--color-ink);
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .day-item:active {
+    transform: scale(0.98);
+    background-color: var(--color-border-subtle);
+    border-color: var(--color-accent);
+  }
+
+  .day-item:hover {
+    border-color: var(--color-accent);
+  }
+}

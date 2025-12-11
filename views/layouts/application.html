@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Koifit - Self-hosted workout tracker">
+    <title>{% block title %}Koifit{% endblock %}</title>
+    
+    <!-- CSS Layers -->
+    <style>
+        @layer reset, base, components, utilities;
+    </style>
+    
+    <!-- Stylesheets in order -->
+    <link rel="stylesheet" href="/assets/stylesheets/_reset.css">
+    <link rel="stylesheet" href="/assets/stylesheets/base.css">
+    <link rel="stylesheet" href="/assets/stylesheets/colors.css">
+    <link rel="stylesheet" href="/assets/stylesheets/utilities.css">
+    <link rel="stylesheet" href="/assets/stylesheets/buttons.css">
+    <link rel="stylesheet" href="/assets/stylesheets/inputs.css">
+    <link rel="stylesheet" href="/assets/stylesheets/layout.css">
+    <link rel="stylesheet" href="/assets/stylesheets/cards.css">
+    <link rel="stylesheet" href="/assets/stylesheets/session-panel.css">
+    <link rel="stylesheet" href="/assets/stylesheets/exercise-card.css">
+    <link rel="stylesheet" href="/assets/stylesheets/set-table.css">
+    <link rel="stylesheet" href="/assets/stylesheets/day-selector.css">
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

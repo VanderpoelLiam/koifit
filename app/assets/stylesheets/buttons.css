@@ -1,0 +1,77 @@
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-target);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-md);
+    font-weight: 500;
+    color: var(--color-ink);
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn:active {
+    transform: scale(0.98);
+  }
+
+  .btn:disabled,
+  .btn[aria-busy="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .btn--primary {
+    color: var(--color-bg);
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .btn--primary:active {
+    background-color: color-mix(in oklch, var(--color-accent) 90%, black);
+  }
+
+  .btn--secondary {
+    background-color: var(--color-border-subtle);
+    border-color: var(--color-border);
+  }
+
+  .btn--danger {
+    color: var(--color-bg);
+    background-color: var(--color-danger);
+    border-color: var(--color-danger);
+  }
+
+  .btn--ghost {
+    background-color: transparent;
+    border-color: transparent;
+  }
+
+  .btn--finish {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-height: 64px;
+    padding: var(--space-md);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-bg);
+    background-color: var(--color-success);
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+  }
+
+  .btn--finish:active {
+    background-color: color-mix(in oklch, var(--color-success) 90%, black);
+  }
+}

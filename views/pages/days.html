@@ -1,0 +1,22 @@
+{% extends "layouts/application.html" %}
+
+{% block title %}Koifit - Select Day{% endblock %}
+
+{% block content %}
+<main class="app-main">
+    <header class="app-header">
+        <h1>Select Workout Day</h1>
+    </header>
+    <div class="day-selector">
+        <div class="day-list">
+            {% for day in days %}
+            <form action="/sessions/start/{{ day.id }}" method="post">
+                <button type="submit" class="day-item" style="width: 100%;">
+                    {{ day.label }}
+                </button>
+            </form>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,108 @@
+@layer components {
+  .exercise-card {
+    margin-block-end: var(--space-lg);
+  }
+
+  .exercise-card__header {
+    margin-block-end: var(--space-md);
+  }
+
+  .exercise-card__title {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    margin-block-end: var(--space-xs);
+  }
+
+  .exercise-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+  }
+
+  .exercise-card__notes {
+    margin-block-end: var(--space-md);
+    padding: var(--space-sm);
+    background-color: var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+  }
+
+  .exercise-card__previous {
+    margin-block-end: var(--space-md);
+    padding: var(--space-sm);
+    background-color: var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+  }
+
+  .exercise-card__previous-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .exercise-card__previous-content {
+    margin-block-start: var(--space-sm);
+  }
+
+  .exercise-card__previous-content[hidden] {
+    display: none;
+  }
+
+  .exercise-card__warmup {
+    margin-block-end: var(--space-md);
+  }
+
+  .exercise-card__sets {
+    margin-block-end: var(--space-md);
+  }
+
+  .exercise-card__dropset {
+    margin-block-end: var(--space-md);
+  }
+
+  .exercise-card__notes-input {
+    margin-block-end: var(--space-md);
+  }
+
+  .exercise-card__effort {
+    display: flex;
+    gap: var(--space-md);
+    margin-block-end: var(--space-md);
+  }
+
+  .effort-tag {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .effort-tag input[type="checkbox"] {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+  }
+
+  .effort-tag--increase input:checked {
+    accent-color: var(--color-effort-increase);
+  }
+
+  .effort-tag--decrease input:checked {
+    accent-color: var(--color-effort-decrease);
+  }
+
+  /* Visual states */
+  .exercise-card:has(.set-done:checked) {
+    border-left: 4px solid var(--color-success);
+  }
+
+  .exercise-card:has(.set-done:not(:checked)) {
+    border-left: 4px solid transparent;
+  }
+}

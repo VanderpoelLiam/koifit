@@ -1,0 +1,83 @@
+@layer components {
+  .input {
+    width: 100%;
+    min-height: var(--touch-target);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-md);
+    color: var(--color-ink);
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast);
+  }
+
+  .input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-accent) 20%, transparent);
+  }
+
+  .input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  input[type="number"].input {
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"].input::-webkit-outer-spin-button,
+  input[type="number"].input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-md);
+    font-family: inherit;
+    color: var(--color-ink);
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    resize: vertical;
+    transition: border-color var(--transition-fast);
+  }
+
+  .textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-accent) 20%, transparent);
+  }
+
+  .checkbox {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--color-accent);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* Completed set row styling */
+  .set-row:has(.set-done:checked) {
+    opacity: 0.6;
+    background-color: var(--color-border-subtle);
+  }
+
+  .set-row:has(.set-done:checked) .input {
+    text-decoration: line-through;
+  }
+}

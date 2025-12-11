@@ -1,0 +1,91 @@
+@layer base {
+  :root {
+    /* Spacing */
+    --space-inline: 1ch;
+    --space-block: 1rem;
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 1.5rem;
+    --space-lg: 2rem;
+    --space-xl: 3rem;
+
+    /* Typography */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-md: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 2rem;
+
+    /* Radius */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+
+    /* Shadows */
+    --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-lifted: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-default: 250ms ease;
+
+    /* Touch targets */
+    --touch-target: 48px;
+  }
+
+  html {
+    font-size: clamp(16px, 4vw, 18px);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: var(--text-md);
+    color: var(--color-ink);
+    background-color: var(--color-bg);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.2;
+    margin-block-end: var(--space-sm);
+  }
+
+  h1 {
+    font-size: var(--text-3xl);
+  }
+
+  h2 {
+    font-size: var(--text-2xl);
+  }
+
+  h3 {
+    font-size: var(--text-xl);
+  }
+
+  p {
+    margin-block-end: var(--space-sm);
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  main {
+    min-height: 100vh;
+  }
+
+  section {
+    margin-block-end: var(--space-lg);
+  }
+
+  article {
+    margin-block-end: var(--space-md);
+  }
+}
