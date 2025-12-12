@@ -77,29 +77,24 @@ class SessionManager {
       });
     }
 
-    // Setup effort tags (mutually exclusive, immediate)
-    const effortIncrease = card.querySelector(".effort-increase");
-    const effortDecrease = card.querySelector(".effort-decrease");
+    // Setup weight change buttons (mutually exclusive, immediate)
+    const weightChangeButtons = card.querySelectorAll(".weight-change__btn");
+    weightChangeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const isPressed = btn.getAttribute("aria-pressed") === "true";
 
-    if (effortIncrease) {
-      effortIncrease.addEventListener("change", () => {
-        if (effortIncrease.checked && effortDecrease) {
-          effortDecrease.checked = false;
+        // Deselect all buttons first
+        weightChangeButtons.forEach((b) => b.setAttribute("aria-pressed", "false"));
+
+        // Toggle this button (if it wasn't pressed, press it)
+        if (!isPressed) {
+          btn.setAttribute("aria-pressed", "true");
         }
+
         const data = this.collectExerciseData(card, true);
         autoSave.saveImmediate(data);
       });
-    }
-
-    if (effortDecrease) {
-      effortDecrease.addEventListener("change", () => {
-        if (effortDecrease.checked && effortIncrease) {
-          effortIncrease.checked = false;
-        }
-        const data = this.collectExerciseData(card, true);
-        autoSave.saveImmediate(data);
-      });
-    }
+    });
 
     this.autoSavers.set(sessionExerciseId, autoSave);
   }
@@ -124,14 +119,14 @@ class SessionManager {
 
     // Collect effort tag - only include when explicitly requested (user interaction)
     if (includeEffortTag) {
-      const effortIncrease = card.querySelector(".effort-increase");
-      const effortDecrease = card.querySelector(".effort-decrease");
-      if (effortIncrease?.checked) {
+      const increaseBtn = card.querySelector('.weight-change__btn[data-effort-tag="increase"]');
+      const decreaseBtn = card.querySelector('.weight-change__btn[data-effort-tag="decrease"]');
+      if (increaseBtn?.getAttribute("aria-pressed") === "true") {
         data.effort_tag = "increase";
-      } else if (effortDecrease?.checked) {
+      } else if (decreaseBtn?.getAttribute("aria-pressed") === "true") {
         data.effort_tag = "decrease";
       } else {
-        // Neither checked = "good" (default state)
+        // Neither pressed = "good" (default state)
         data.effort_tag = "good";
       }
     }
@@ -170,15 +165,40 @@ class SessionManager {
 
   setupFinishButton() {
     const finishButton = document.getElementById("finish-workout");
-    if (!finishButton) {
+    const modal = document.getElementById("finish-modal");
+    const backdrop = document.getElementById("modal-backdrop");
+    const cancelBtn = document.getElementById("modal-cancel");
+    const confirmBtn = document.getElementById("modal-confirm");
+
+    if (!finishButton || !modal) {
       return;
     }
 
-    finishButton.addEventListener("click", async () => {
-      // Confirm before finishing
-      if (!confirm("Are you sure you want to finish this workout?")) {
-        return;
+    const showModal = () => {
+      modal.classList.add("is-visible");
+      backdrop.classList.add("is-visible");
+      confirmBtn.focus();
+    };
+
+    const hideModal = () => {
+      modal.classList.remove("is-visible");
+      backdrop.classList.remove("is-visible");
+      finishButton.focus();
+    };
+
+    finishButton.addEventListener("click", showModal);
+    cancelBtn.addEventListener("click", hideModal);
+    backdrop.addEventListener("click", hideModal);
+
+    // Close on Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("is-visible")) {
+        hideModal();
       }
+    });
+
+    confirmBtn.addEventListener("click", async () => {
+      hideModal();
 
       // Save all exercise data one final time
       const exerciseCards = document.querySelectorAll(".exercise-card");

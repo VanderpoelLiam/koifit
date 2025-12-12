@@ -19,13 +19,36 @@ router = APIRouter()
 
 @router.post("/sessions/start/{day_id}")
 async def start_session(day_id, request: Request):
-    """Create a new session or return existing unfinished session."""
+    """Create a new session, discarding any unfinished session."""
     db = request.app.state.db
-    cursor = await db.execute("SELECT id FROM session WHERE is_finished = 0 LIMIT 1")
-    unfinished = await cursor.fetchone()
 
-    if unfinished:
-        return RedirectResponse(url=f"/sessions/{unfinished['id']}", status_code=303)
+    # Delete any unfinished sessions and their related data
+    cursor = await db.execute("SELECT id FROM session WHERE is_finished = 0")
+    unfinished_sessions = await cursor.fetchall()
+
+    for unfinished in unfinished_sessions:
+        session_id = unfinished["id"]
+        # Get session_exercise IDs for this session
+        cursor = await db.execute(
+            "SELECT id FROM session_exercise WHERE session_id = ?", (session_id,)
+        )
+        session_exercises = await cursor.fetchall()
+
+        # Delete set_entries for each session_exercise
+        for se in session_exercises:
+            await db.execute(
+                "DELETE FROM set_entry WHERE session_exercise_id = ?", (se["id"],)
+            )
+
+        # Delete session_exercises
+        await db.execute(
+            "DELETE FROM session_exercise WHERE session_id = ?", (session_id,)
+        )
+
+        # Delete the session
+        await db.execute("DELETE FROM session WHERE id = ?", (session_id,))
+
+    await db.commit()
 
     cursor = await db.execute("SELECT id FROM day WHERE id = ?", (day_id,))
     day = await cursor.fetchone()

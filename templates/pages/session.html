@@ -6,7 +6,6 @@
 <main class="app-main">
     <header class="session-header">
         <h1>{{ day.label }}</h1>
-        <div class="date">{{ session.date }}</div>
     </header>
 
     <div class="session-exercises">
@@ -37,18 +36,19 @@
                 </div>
                 <div class="exercise-card__previous-content" hidden>
                     {% if se.previous.next_time_note %}
-                    <p><strong>Notes:</strong> {{ se.previous.next_time_note }}</p>
+                    <p class="previous-note">{{ se.previous.next_time_note }}</p>
                     {% endif %}
-                    {% if se.previous.effort_tag %}
-                    <p><strong>Effort:</strong> {{ se.previous.effort_tag }}</p>
+                    {% if se.previous.effort_tag == "increase" %}
+                    <p class="previous-effort previous-effort--increase">↑ Increase weight</p>
+                    {% elif se.previous.effort_tag == "decrease" %}
+                    <p class="previous-effort previous-effort--decrease">↓ Decrease weight</p>
                     {% endif %}
                     {% if se.previous.sets %}
-                    <p><strong>Previous sets:</strong></p>
-                    <ul>
+                    <div class="previous-sets">
                         {% for prev_set in se.previous.sets %}
-                        <li>Set {{ prev_set.set_number }}: {{ prev_set.weight_kg }}kg × {{ prev_set.reps }} reps</li>
+                        <span class="previous-set">{{ prev_set.weight_kg }}kg × {{ prev_set.reps }} reps</span>
                         {% endfor %}
-                    </ul>
+                    </div>
                     {% endif %}
                 </div>
             </div>
@@ -133,25 +133,12 @@
                 >{{ se.next_time_note or "" }}</textarea>
             </div>
 
-            <div class="exercise-card__effort">
-                <label class="effort-tag effort-tag--increase">
-                    <input
-                        type="checkbox"
-                        class="checkbox effort-increase"
-                        data-effort-tag="increase"
-                        {% if se.effort_tag == "increase" %}checked{% endif %}
-                    />
-                    <span>+ Increase</span>
-                </label>
-                <label class="effort-tag effort-tag--decrease">
-                    <input
-                        type="checkbox"
-                        class="checkbox effort-decrease"
-                        data-effort-tag="decrease"
-                        {% if se.effort_tag == "decrease" %}checked{% endif %}
-                    />
-                    <span>- Decrease</span>
-                </label>
+            <div class="weight-change">
+                <span class="weight-change__label">Weight Change</span>
+                <div class="weight-change__buttons">
+                    <button type="button" class="weight-change__btn" data-effort-tag="decrease" {% if se.effort_tag == "decrease" %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>−</button>
+                    <button type="button" class="weight-change__btn" data-effort-tag="increase" {% if se.effort_tag == "increase" %}aria-pressed="true"{% else %}aria-pressed="false"{% endif %}>+</button>
+                </div>
             </div>
         </div>
         {% endfor %}
@@ -159,6 +146,19 @@
 </main>
 
 <button class="btn btn--finish" id="finish-workout">Finish Workout</button>
+
+<!-- Finish Workout Confirmation Modal -->
+<div class="modal-backdrop" id="modal-backdrop"></div>
+<div class="modal" id="finish-modal" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+    <div class="modal__content">
+        <h2 class="modal__title" id="modal-title">Finish Workout?</h2>
+        <p class="modal__message">Your progress has been saved. Ready to wrap up?</p>
+    </div>
+    <div class="modal__actions">
+        <button type="button" class="modal__btn modal__btn--cancel" id="modal-cancel">Cancel</button>
+        <button type="button" class="modal__btn modal__btn--confirm" id="modal-confirm">Finish</button>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

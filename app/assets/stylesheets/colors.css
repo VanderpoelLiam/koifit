@@ -34,10 +34,6 @@
     --color-danger: oklch(var(--lch-red));
     --color-info: oklch(var(--lch-blue));
 
-    /* Effort tag colors */
-    --color-effort-increase: oklch(var(--lch-green));
-    --color-effort-decrease: oklch(var(--lch-red));
-    --color-effort-good: oklch(var(--lch-gray));
 
     /* Warm shadow tones for softer appearance */
     --shadow-color: 25 15% 8%;

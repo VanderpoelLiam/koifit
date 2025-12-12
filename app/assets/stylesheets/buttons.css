@@ -83,9 +83,9 @@
     --btn-background: var(--color-bg-subtle);
   }
 
-  /* Finish workout button - prominent success action */
+  /* Finish workout button - prominent action with coral accent */
   .btn--finish {
-    --btn-background: var(--color-success);
+    --btn-background: var(--color-accent);
     --btn-color: white;
     --btn-border-color: transparent;
     --btn-border-radius: 0;

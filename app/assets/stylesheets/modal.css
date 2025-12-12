@@ -1,0 +1,106 @@
+@layer components {
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: hsl(var(--shadow-color) / 0.4);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-default), visibility var(--transition-default);
+    z-index: 200;
+  }
+
+  .modal-backdrop.is-visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    width: calc(100% - var(--space-lg) * 2);
+    max-width: 320px;
+    background-color: var(--color-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 16px 48px hsl(var(--shadow-color) / 0.2),
+                0 4px 12px hsl(var(--shadow-color) / 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-default),
+                visibility var(--transition-default),
+                transform var(--transition-default);
+    z-index: 201;
+  }
+
+  .modal.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .modal__content {
+    padding: var(--space-lg);
+    text-align: center;
+  }
+
+  .modal__title {
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--color-ink);
+    margin-block-end: var(--space-xs);
+  }
+
+  .modal__message {
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+    line-height: 1.5;
+  }
+
+  .modal__actions {
+    display: flex;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .modal__btn {
+    flex: 1;
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-md);
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    min-height: 48px;
+  }
+
+  .modal__btn:first-child {
+    border-right: 1px solid var(--color-border-subtle);
+    border-radius: 0 0 0 var(--radius-lg);
+  }
+
+  .modal__btn:last-child {
+    border-radius: 0 0 var(--radius-lg) 0;
+  }
+
+  .modal__btn--cancel {
+    color: var(--color-ink-muted);
+  }
+
+  .modal__btn--cancel:hover {
+    background-color: var(--color-bg-subtle);
+  }
+
+  .modal__btn--confirm {
+    color: var(--color-accent);
+  }
+
+  .modal__btn--confirm:hover {
+    background-color: color-mix(in oklch, var(--color-accent) 8%, var(--color-bg));
+  }
+
+  .modal__btn--confirm:active {
+    background-color: color-mix(in oklch, var(--color-accent) 15%, var(--color-bg));
+  }
+}

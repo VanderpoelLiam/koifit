@@ -7,15 +7,10 @@
   }
 
   .session-header h1 {
-    margin-block-end: var(--space-xs);
+    margin-block-end: 0;
     font-size: var(--text-xl);
     font-weight: 500;
     color: var(--color-ink);
-  }
-
-  .session-header .date {
-    font-size: var(--text-sm);
-    color: var(--color-ink-muted);
   }
 
   .session-exercises {
