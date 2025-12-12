@@ -6,12 +6,12 @@ import os
 from pathlib import Path
 
 
-def get_project_root() -> Path:
+def get_project_root():
     """Return repository root (one level above the koifit package)."""
     return Path(__file__).resolve().parent.parent
 
 
-def get_db_path() -> Path:
+def get_db_path():
     """
     Resolve the SQLite database path.
 

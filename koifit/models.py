@@ -3,7 +3,6 @@ Pydantic models for request/response validation
 """
 
 from pydantic import BaseModel
-from typing import Optional, List
 
 
 class SetEntryInput(BaseModel):
@@ -18,10 +17,10 @@ class SetEntryInput(BaseModel):
 class SaveExerciseRequest(BaseModel):
     """Request body for saving exercise data."""
 
-    notes: Optional[str] = None
-    effort_tag: Optional[str] = None
-    dropset_done: Optional[int] = None
-    sets: Optional[List[SetEntryInput]] = None
+    notes: str | None = None
+    effort_tag: str | None = None
+    dropset_done: int | None = None
+    sets: list[SetEntryInput] | None = None
 
 
 class SaveExerciseResponse(BaseModel):

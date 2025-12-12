@@ -3,22 +3,24 @@ Routes for sessions: start, view, autosave, and finish.
 """
 
 from datetime import date
-from typing import List, Optional
 
-import aiosqlite
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 
-from koifit.db import get_db
 from koifit.templates import templates
-from models import FinishSessionResponse, SaveExerciseRequest, SaveExerciseResponse
+from koifit.models import (
+    FinishSessionResponse,
+    SaveExerciseRequest,
+    SaveExerciseResponse,
+)
 
 router = APIRouter()
 
 
 @router.post("/sessions/start/{day_id}")
-async def start_session(day_id: int, db: aiosqlite.Connection = Depends(get_db)):
+async def start_session(day_id, request: Request):
     """Create a new session or return existing unfinished session."""
+    db = request.app.state.db
     cursor = await db.execute("SELECT id FROM session WHERE is_finished = 0 LIMIT 1")
     unfinished = await cursor.fetchone()
 
@@ -42,8 +44,9 @@ async def start_session(day_id: int, db: aiosqlite.Connection = Depends(get_db))
 
 
 @router.get("/sessions/{session_id}", response_class=HTMLResponse)
-async def session_page(session_id: int, db: aiosqlite.Connection = Depends(get_db)):
+async def session_page(session_id, request: Request):
     """Workout session page."""
+    db = request.app.state.db
     cursor = await db.execute(
         "SELECT id, day_id, date, is_finished FROM session WHERE id = ?",
         (session_id,),
@@ -69,7 +72,7 @@ async def session_page(session_id: int, db: aiosqlite.Connection = Depends(get_d
     )
     slots = await cursor.fetchall()
 
-    session_exercises: List[dict] = []
+    session_exercises = []
     for slot in slots:
         cursor = await db.execute(
             "SELECT id FROM session_exercise WHERE session_id = ? AND slot_id = ?",
@@ -114,7 +117,7 @@ async def session_page(session_id: int, db: aiosqlite.Connection = Depends(get_d
         )
         prev_session = await cursor.fetchone()
 
-        prev_sets: Optional[list] = []
+        prev_sets = []
         if prev_session:
             cursor = await db.execute(
                 """SELECT set_number, weight_kg, reps
@@ -160,12 +163,13 @@ async def session_page(session_id: int, db: aiosqlite.Connection = Depends(get_d
     response_model=SaveExerciseResponse,
 )
 async def save_exercise(
-    session_id: int,
-    session_exercise_id: int,
+    session_id,
+    session_exercise_id,
     data: SaveExerciseRequest,
-    db: aiosqlite.Connection = Depends(get_db),
+    request: Request,
 ):
     """Auto-save endpoint for exercise data."""
+    db = request.app.state.db
     cursor = await db.execute(
         "SELECT id FROM session_exercise WHERE id = ? AND session_id = ?",
         (session_exercise_id, session_id),
@@ -175,7 +179,7 @@ async def save_exercise(
         raise HTTPException(status_code=404, detail="Session exercise not found")
 
     updates = []
-    params: list = []
+    params = []
     if data.notes is not None:
         updates.append("next_time_note = ?")
         params.append(data.notes)
@@ -232,8 +236,9 @@ async def save_exercise(
 
 
 @router.post("/sessions/{session_id}/finish", response_model=FinishSessionResponse)
-async def finish_session(session_id: int, db: aiosqlite.Connection = Depends(get_db)):
+async def finish_session(session_id, request: Request):
     """Mark session as finished."""
+    db = request.app.state.db
     cursor = await db.execute(
         "SELECT id, is_finished FROM session WHERE id = ?", (session_id,)
     )

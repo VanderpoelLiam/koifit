@@ -2,19 +2,18 @@
 Routes for the home and day selection pages.
 """
 
-import aiosqlite
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 
-from koifit.db import get_db
 from koifit.templates import templates
 
 router = APIRouter()
 
 
 @router.get("/", response_class=HTMLResponse)
-async def home(db: aiosqlite.Connection = Depends(get_db)):
+async def home(request: Request):
     """Home page - shows resume option or day selection."""
+    db = request.app.state.db
     cursor = await db.execute(
         "SELECT id, day_id FROM session WHERE is_finished = 0 LIMIT 1"
     )
@@ -46,8 +45,9 @@ async def home(db: aiosqlite.Connection = Depends(get_db)):
 
 
 @router.get("/days", response_class=HTMLResponse)
-async def days_page(db: aiosqlite.Connection = Depends(get_db)):
+async def days_page(request: Request):
     """Day selection page."""
+    db = request.app.state.db
     cursor = await db.execute("SELECT id, label, ordinal FROM day ORDER BY ordinal")
     days = await cursor.fetchall()
     template = templates.get_template("pages/days.html")

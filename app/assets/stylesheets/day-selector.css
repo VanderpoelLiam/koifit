@@ -11,6 +11,7 @@
 
   .day-item {
     display: block;
+    width: 100%;
     min-height: var(--touch-target);
     padding: var(--space-lg);
     font-size: var(--text-xl);

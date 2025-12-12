@@ -11,7 +11,7 @@
         <div class="day-list">
             {% for day in days %}
             <form action="/sessions/start/{{ day.id }}" method="post">
-                <button type="submit" class="day-item" style="width: 100%;">
+                <button type="submit" class="day-item">
                     {{ day.label }}
                 </button>
             </form>

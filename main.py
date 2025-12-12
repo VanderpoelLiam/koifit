@@ -3,8 +3,8 @@ Koifit Workout Tracker - FastAPI Application
 """
 
 from contextlib import asynccontextmanager
-from pathlib import Path
 
+import aiosqlite
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
@@ -13,17 +13,20 @@ from koifit.routes import home_router, sessions_router
 from koifit.settings import get_db_path
 
 
-def create_app(db_path: Path | None = None) -> FastAPI:
+def create_app(db_path=None):
     """
     Build the FastAPI application with a configurable database path.
     """
     resolved_db_path = db_path or get_db_path()
 
     @asynccontextmanager
-    async def lifespan(app: FastAPI):
+    async def lifespan(app):
         await ensure_database(resolved_db_path)
-        app.state.db_path = resolved_db_path
+        # Create a single shared database connection for single-user app
+        app.state.db = await aiosqlite.connect(str(resolved_db_path))
+        app.state.db.row_factory = aiosqlite.Row
         yield
+        await app.state.db.close()
 
     app = FastAPI(
         title="Koifit Workout Tracker",

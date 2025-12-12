@@ -9,21 +9,21 @@ import aiosqlite
 SQL_DIR = Path(__file__).resolve().parent / "sql"
 
 
-async def apply_schema(db: aiosqlite.Connection) -> None:
+async def apply_schema(db):
     """Apply the SQL schema from db/schema.sql."""
     schema_path = SQL_DIR / "schema.sql"
     schema_sql = schema_path.read_text()
     await db.executescript(schema_sql)
 
 
-async def apply_seed(db: aiosqlite.Connection) -> None:
+async def apply_seed(db):
     """Seed the database from db/seed.sql."""
     seed_path = SQL_DIR / "seed.sql"
     seed_sql = seed_path.read_text()
     await db.executescript(seed_sql)
 
 
-async def init_database(db_path: Path, overwrite: bool = False) -> None:
+async def init_database(db_path, overwrite=False):
     """
     Create and seed a SQLite database at db_path.
 
@@ -39,7 +39,7 @@ async def init_database(db_path: Path, overwrite: bool = False) -> None:
         await db.commit()
 
 
-async def ensure_database(db_path: Path) -> None:
+async def ensure_database(db_path):
     """
     Ensure the database file exists; if missing, create and seed it.
     """

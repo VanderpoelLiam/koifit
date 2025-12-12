@@ -9,10 +9,10 @@
         <div class="stack stack-lg">
             <h1>Resume Workout</h1>
             <p class="text-quiet">You have an unfinished {{ day_label }} session.</p>
-            <a href="/sessions/{{ session_id }}" class="btn btn--primary" style="width: 100%;">
+            <a href="/sessions/{{ session_id }}" class="btn btn--primary btn--full-width">
                 Resume {{ day_label }}
             </a>
-            <a href="/days" class="btn btn--secondary" style="width: 100%;">
+            <a href="/days" class="btn btn--secondary btn--full-width">
                 Start New Workout
             </a>
         </div>
@@ -23,7 +23,7 @@
             <div class="day-list">
                 {% for day in days %}
                 <form action="/sessions/start/{{ day.id }}" method="post">
-                    <button type="submit" class="day-item" style="width: 100%;">
+                    <button type="submit" class="day-item">
                         {{ day.label }}
                     </button>
                 </form>
