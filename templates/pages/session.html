@@ -21,7 +21,7 @@
                     {% if se.slot.rpe_range %}
                     <span>RPE: {{ se.slot.rpe_range }}</span>
                     {% endif %}
-                    <span>Rest: {{ se.slot.rest_minutes }} min</span>
+                    <span>Rest: {{ se.slot.rest_minutes|rest_time }}</span>
                 </div>
             </div>
 
@@ -49,7 +49,7 @@
                     {% if se.previous.sets %}
                     <div class="previous-sets">
                         {% for prev_set in se.previous.sets %}
-                        <span class="previous-set">{{ prev_set.weight_kg }}kg × {{ prev_set.reps }} reps</span>
+                        <span class="previous-set">{{ prev_set.weight_kg|weight }} kg × {{ prev_set.reps }} reps</span>
                         {% endfor %}
                     </div>
                     {% endif %}
@@ -86,7 +86,7 @@
                                     type="number"
                                     class="input set-weight"
                                     data-set-number="{{ set_num }}"
-                                    value="{% if existing_set %}{{ existing_set.weight_kg }}{% elif se.previous and se.previous.sets | length >= set_num %}{{ se.previous.sets[set_num - 1].weight_kg }}{% endif %}"
+                                    value="{% if existing_set %}{{ existing_set.weight_kg|weight }}{% elif se.previous and se.previous.sets | length >= set_num %}{{ se.previous.sets[set_num - 1].weight_kg|weight }}{% endif %}"
                                     step="0.25"
                                 />
                             </td>

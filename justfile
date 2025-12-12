@@ -23,3 +23,7 @@ test:
 # Serve the app locally with reload
 serve:
     uv run uvicorn main:app --reload
+
+# Reset database (purge and reinitialize from schema + seed)
+db-reset:
+    uv run python init_db.py
