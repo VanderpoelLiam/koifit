@@ -134,3 +134,4 @@ export class AutoSave {
     this.debounce(key, () => this.save(data), delay);
   }
 }
+

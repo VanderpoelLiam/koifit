@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  koifit:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - KOIFIT_DB_PATH=/app/db/db.sqlite
+    volumes:
+      - koifit_db:/app/db
+    command: ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+volumes:
+  koifit_db:
+

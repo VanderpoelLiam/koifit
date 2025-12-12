@@ -59,3 +59,4 @@ INSERT INTO slot (day_id, ordinal, title, preferred_exercise_id, warmup_sets, wo
 (4, 3, 'DB Incline Curl', 16, '1', 2, '12-15', '10', 1.5, 0),
 (4, 4, 'Triceps Pressdown', 17, '1', 2, '12-15', '10', 1.5, 0),
 (4, 5, 'Leg Extension', 18, '1', 1, '10-12', '9-10', 1.5, 1);
+
