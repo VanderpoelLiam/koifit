@@ -1,18 +1,4 @@
 @layer components {
-  .session-header {
-    padding: var(--space-sm) var(--space-md);
-    background-color: var(--color-bg);
-    border-bottom: 1px solid var(--color-border-subtle);
-    text-align: center;
-  }
-
-  .session-header h1 {
-    margin-block-end: 0;
-    font-size: var(--text-xl);
-    font-weight: 500;
-    color: var(--color-ink);
-  }
-
   .session-exercises {
     padding: var(--space-sm);
     max-width: 680px;

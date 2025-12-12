@@ -4,10 +4,15 @@
 
 {% block content %}
 <main class="app-main">
+    <header class="page-header page-header--hero">
+        <a href="/" class="page-header__logo" aria-label="Koifit Home">
+            <img src="/assets/images/logo-icon.svg" alt="Koifit" width="40" height="40">
+        </a>
+        <h1 class="page-header__title page-header__title--hero">{% if has_unfinished_session %}Resume Workout{% else %}Start Workout{% endif %}</h1>
+    </header>
     <div class="container">
         {% if has_unfinished_session %}
         <div class="stack stack-lg">
-            <h1>Resume Workout</h1>
             <p class="text-quiet">You have an unfinished {{ day_label }} session.</p>
             <a href="/sessions/{{ session_id }}" class="btn btn--primary btn--full-width">
                 Resume {{ day_label }}
@@ -18,7 +23,6 @@
         </div>
         {% else %}
         <div class="stack stack-lg">
-            <h1>Start Workout</h1>
             <p class="text-quiet">Select a workout day to begin.</p>
             <div class="day-list">
                 {% for day in days %}

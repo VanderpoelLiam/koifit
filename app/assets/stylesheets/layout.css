@@ -1,27 +1,57 @@
 @layer components {
-  /* Logo in a proper header bar - not fixed */
-  .app-logo {
-    display: block;
-    padding: var(--space-sm);
-    line-height: 0;
-    opacity: 0.7;
-    transition: opacity var(--transition-fast);
-  }
-
-  .app-logo:hover {
-    opacity: 1;
-  }
-
-  .app-logo img {
-    display: block;
-    width: 28px;
-    height: 28px;
-  }
-
-  .app-header {
-    padding: var(--space-sm) var(--space-md);
+  /* Page header with logo and title */
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-lg);
     background-color: var(--color-bg);
     border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .page-header__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    opacity: 0.85;
+    transition: opacity var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  .page-header__logo:hover {
+    opacity: 1;
+    text-decoration: none;
+  }
+
+  .page-header__logo img {
+    display: block;
+    width: 32px;
+    height: 32px;
+  }
+
+  .page-header__title {
+    margin: 0;
+    font-size: var(--text-xl);
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+
+  .page-header__title--large {
+    font-size: var(--text-2xl);
+  }
+
+  /* Hero variant for home page */
+  .page-header--hero {
+    gap: var(--space-md);
+    padding: var(--space-xl) var(--space-lg);
+  }
+
+  .page-header__title--hero {
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .app-main {
