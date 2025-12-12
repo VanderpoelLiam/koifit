@@ -517,7 +517,65 @@ class SessionManager {
         console.error("Finish error:", error);
         alert("Error finishing. Try again.");
         finishButton.disabled = false;
-        finishButton.textContent = "Finish Workout";
+        finishButton.textContent = "Finish";
+      }
+    });
+
+    // Setup discard button
+    this.setupDiscardButton();
+  }
+
+  setupDiscardButton() {
+    const discardButton = document.getElementById("discard-workout");
+    const modal = document.getElementById("discard-modal");
+    const backdrop = document.getElementById("modal-backdrop");
+    const cancelBtn = document.getElementById("discard-cancel");
+    const confirmBtn = document.getElementById("discard-confirm");
+
+    if (!discardButton || !modal) {
+      return;
+    }
+
+    const showModal = () => {
+      modal.classList.add("is-visible");
+      backdrop.classList.add("is-visible");
+      cancelBtn.focus();
+    };
+
+    const hideModal = () => {
+      modal.classList.remove("is-visible");
+      backdrop.classList.remove("is-visible");
+      discardButton.focus();
+    };
+
+    discardButton.addEventListener("click", showModal);
+    cancelBtn.addEventListener("click", hideModal);
+
+    confirmBtn.addEventListener("click", async () => {
+      hideModal();
+
+      try {
+        discardButton.disabled = true;
+        discardButton.textContent = "...";
+
+        const response = await fetch(
+          `/sessions/${this.sessionId}/discard`,
+          {
+            method: "POST",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Discard failed: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        window.location.href = result.redirect || "/";
+      } catch (error) {
+        console.error("Discard error:", error);
+        alert("Error discarding. Try again.");
+        discardButton.disabled = false;
+        discardButton.textContent = "Discard";
       }
     });
   }

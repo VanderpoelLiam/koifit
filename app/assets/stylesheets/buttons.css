@@ -83,6 +83,17 @@
     --btn-background: var(--color-bg-subtle);
   }
 
+  /* Session action buttons container */
+  .session-actions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    z-index: 100;
+    box-shadow: 0 -2px 12px hsl(var(--shadow-color) / 0.1);
+  }
+
   /* Finish workout button - prominent action with coral accent */
   .btn--finish {
     --btn-background: var(--color-accent);
@@ -90,27 +101,35 @@
     --btn-border-color: transparent;
     --btn-border-radius: 0;
 
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
+    flex: 1;
     min-height: 56px;
     padding: var(--space-sm) var(--space-md);
     font-size: var(--text-md);
     font-weight: 500;
     border: none;
-    box-shadow: 0 -2px 12px hsl(var(--shadow-color) / 0.1);
-    z-index: 100;
   }
 
   .btn--finish:hover {
     transform: none;
-    box-shadow: 0 -6px 32px hsl(var(--shadow-color) / 0.15);
   }
 
-  .btn--finish:active {
-    box-shadow: 0 -2px 16px hsl(var(--shadow-color) / 0.1);
+  /* Discard workout button */
+  .btn--discard {
+    --btn-background: var(--color-bg-subtle);
+    --btn-color: var(--color-ink-muted);
+    --btn-border-color: transparent;
+    --btn-border-radius: 0;
+
+    min-height: 56px;
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--text-sm);
+    font-weight: 400;
+    border: none;
+  }
+
+  .btn--discard:hover {
+    --btn-background: var(--color-border-subtle);
+    transform: none;
   }
 
   /* Full width button */

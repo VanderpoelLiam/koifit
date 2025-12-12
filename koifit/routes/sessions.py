@@ -275,3 +275,38 @@ async def finish_session(session_id, request: Request):
     await db.commit()
 
     return FinishSessionResponse(status="ok", redirect="/")
+
+
+@router.post("/sessions/{session_id}/discard", response_model=FinishSessionResponse)
+async def discard_session(session_id, request: Request):
+    """Discard (delete) an unfinished session."""
+    db = request.app.state.db
+    cursor = await db.execute(
+        "SELECT id, is_finished FROM session WHERE id = ?", (session_id,)
+    )
+    session = await cursor.fetchone()
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    if session["is_finished"]:
+        raise HTTPException(status_code=400, detail="Cannot discard finished session")
+
+    # Get session_exercise IDs
+    cursor = await db.execute(
+        "SELECT id FROM session_exercise WHERE session_id = ?", (session_id,)
+    )
+    session_exercises = await cursor.fetchall()
+
+    # Delete set_entries for each session_exercise
+    for se in session_exercises:
+        await db.execute(
+            "DELETE FROM set_entry WHERE session_exercise_id = ?", (se["id"],)
+        )
+
+    # Delete session_exercises
+    await db.execute("DELETE FROM session_exercise WHERE session_id = ?", (session_id,))
+
+    # Delete the session
+    await db.execute("DELETE FROM session WHERE id = ?", (session_id,))
+    await db.commit()
+
+    return FinishSessionResponse(status="ok", redirect="/")

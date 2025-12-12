@@ -148,7 +148,10 @@
     </div>
 </main>
 
-<button class="btn btn--finish" id="finish-workout">Finish Workout</button>
+<div class="session-actions">
+    <button class="btn btn--finish" id="finish-workout">Finish</button>
+    <button class="btn btn--discard" id="discard-workout">Discard</button>
+</div>
 
 <!-- Rest Timer -->
 <div class="rest-timer" id="rest-timer" hidden>
@@ -160,14 +163,26 @@
 
 <!-- Finish Workout Confirmation Modal -->
 <div class="modal-backdrop" id="modal-backdrop"></div>
-<div class="modal" id="finish-modal" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+<div class="modal" id="finish-modal" role="dialog" aria-labelledby="finish-modal-title" aria-modal="true">
     <div class="modal__content">
-        <h2 class="modal__title" id="modal-title">Finish Workout?</h2>
-        <p class="modal__message">Your progress has been saved. Ready to wrap up?</p>
+        <h2 class="modal__title" id="finish-modal-title">Finish?</h2>
+        <p class="modal__message">Progress saved.</p>
     </div>
     <div class="modal__actions">
         <button type="button" class="modal__btn modal__btn--cancel" id="modal-cancel">Cancel</button>
         <button type="button" class="modal__btn modal__btn--confirm" id="modal-confirm">Finish</button>
+    </div>
+</div>
+
+<!-- Discard Workout Confirmation Modal -->
+<div class="modal" id="discard-modal" role="dialog" aria-labelledby="discard-modal-title" aria-modal="true">
+    <div class="modal__content">
+        <h2 class="modal__title" id="discard-modal-title">Discard?</h2>
+        <p class="modal__message">This will delete all progress.</p>
+    </div>
+    <div class="modal__actions">
+        <button type="button" class="modal__btn modal__btn--cancel" id="discard-cancel">Cancel</button>
+        <button type="button" class="modal__btn modal__btn--danger" id="discard-confirm">Discard</button>
     </div>
 </div>
 {% endblock %}

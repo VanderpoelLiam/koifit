@@ -103,4 +103,16 @@
   .modal__btn--confirm:active {
     background-color: color-mix(in oklch, var(--color-accent) 15%, var(--color-bg));
   }
+
+  .modal__btn--danger {
+    color: var(--color-danger);
+  }
+
+  .modal__btn--danger:hover {
+    background-color: color-mix(in oklch, var(--color-danger) 8%, var(--color-bg));
+  }
+
+  .modal__btn--danger:active {
+    background-color: color-mix(in oklch, var(--color-danger) 15%, var(--color-bg));
+  }
 }
