@@ -8,11 +8,13 @@ default:
 # Install all dependencies (including dev extras)
 install:
     uv sync --extra dev
+    uv run pre-commit install
 
-# Run code quality checks (ruff format + lint)
+# Run code quality checks
 check:
     uv run ruff format .
     uv run ruff check .
+    uv run pre-commit run --all-files
 
 # Run tests
 test:

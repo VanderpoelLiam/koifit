@@ -1,6 +1,7 @@
 """
 Routes for sessions: start, view, autosave, and finish.
 """
+
 from datetime import date
 from typing import List, Optional
 
@@ -18,9 +19,7 @@ router = APIRouter()
 @router.post("/sessions/start/{day_id}")
 async def start_session(day_id: int, db: aiosqlite.Connection = Depends(get_db)):
     """Create a new session or return existing unfinished session."""
-    cursor = await db.execute(
-        "SELECT id FROM session WHERE is_finished = 0 LIMIT 1"
-    )
+    cursor = await db.execute("SELECT id FROM session WHERE is_finished = 0 LIMIT 1")
     unfinished = await cursor.fetchone()
 
     if unfinished:
@@ -138,9 +137,7 @@ async def session_page(session_id: int, db: aiosqlite.Connection = Depends(get_d
                     "next_time_note": prev_session["next_time_note"]
                     if prev_session
                     else None,
-                    "effort_tag": prev_session["effort_tag"]
-                    if prev_session
-                    else None,
+                    "effort_tag": prev_session["effort_tag"] if prev_session else None,
                     "sets": [dict(s) for s in prev_sets],
                 }
                 if prev_session
@@ -234,12 +231,8 @@ async def save_exercise(
     return SaveExerciseResponse(status="ok")
 
 
-@router.post(
-    "/sessions/{session_id}/finish", response_model=FinishSessionResponse
-)
-async def finish_session(
-    session_id: int, db: aiosqlite.Connection = Depends(get_db)
-):
+@router.post("/sessions/{session_id}/finish", response_model=FinishSessionResponse)
+async def finish_session(session_id: int, db: aiosqlite.Connection = Depends(get_db)):
     """Mark session as finished."""
     cursor = await db.execute(
         "SELECT id, is_finished FROM session WHERE id = ?", (session_id,)
@@ -250,10 +243,7 @@ async def finish_session(
     if session["is_finished"]:
         raise HTTPException(status_code=400, detail="Session already finished")
 
-    await db.execute(
-        "UPDATE session SET is_finished = 1 WHERE id = ?", (session_id,)
-    )
+    await db.execute("UPDATE session SET is_finished = 1 WHERE id = ?", (session_id,))
     await db.commit()
 
     return FinishSessionResponse(status="ok", redirect="/")
-

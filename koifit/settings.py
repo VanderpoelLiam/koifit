@@ -1,6 +1,7 @@
 """
 Application configuration helpers.
 """
+
 import os
 from pathlib import Path
 
@@ -21,4 +22,3 @@ def get_db_path() -> Path:
     if env_path:
         return Path(env_path)
     return get_project_root() / "db" / "db.sqlite"
-

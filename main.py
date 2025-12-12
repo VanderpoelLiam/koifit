@@ -1,6 +1,7 @@
 """
 Koifit Workout Tracker - FastAPI Application
 """
+
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -49,4 +50,3 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
-

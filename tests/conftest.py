@@ -33,4 +33,3 @@ async def db_conn(db_path: Path):
     async with aiosqlite.connect(str(db_path)) as db:
         db.row_factory = aiosqlite.Row
         yield db
-

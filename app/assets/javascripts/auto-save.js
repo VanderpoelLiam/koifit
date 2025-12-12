@@ -30,7 +30,7 @@ export class AutoSave {
    */
   mergeData(existing, incoming) {
     const merged = { ...existing };
-    
+
     // Merge sets - combine arrays and update/insert by set_number
     if (incoming.sets && incoming.sets.length > 0) {
       if (!merged.sets) {
@@ -44,7 +44,7 @@ export class AutoSave {
       });
       merged.sets = Array.from(setsMap.values());
     }
-    
+
     // Merge other fields - incoming takes precedence if present
     if (incoming.notes !== undefined) {
       merged.notes = incoming.notes;
@@ -55,7 +55,7 @@ export class AutoSave {
     if (incoming.dropset_done !== undefined) {
       merged.dropset_done = incoming.dropset_done;
     }
-    
+
     return merged;
   }
 
@@ -78,7 +78,7 @@ export class AutoSave {
 
     // Start save immediately
     await this.performSave(data);
-    
+
     // After save completes, check for pending data
     // Process it recursively (which will set saving flag again)
     if (this.pendingData) {
@@ -134,4 +134,3 @@ export class AutoSave {
     this.debounce(key, () => this.save(data), delay);
   }
 }
-

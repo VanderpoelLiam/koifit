@@ -9,7 +9,9 @@ async def _start_session(client, day_id: int) -> int:
     return int(location.rsplit("/", 1)[-1])
 
 
-async def _get_first_session_exercise_id(db_conn: aiosqlite.Connection, session_id: int) -> int:
+async def _get_first_session_exercise_id(
+    db_conn: aiosqlite.Connection, session_id: int
+) -> int:
     cursor = await db_conn.execute(
         "SELECT id FROM session_exercise WHERE session_id = ? ORDER BY id LIMIT 1",
         (session_id,),
@@ -49,9 +51,7 @@ async def test_session_page_creates_session_exercises(client, db_conn):
     resp = await client.get(f"/sessions/{session_id}")
     assert resp.status_code == 200
 
-    cursor = await db_conn.execute(
-        "SELECT COUNT(*) FROM slot WHERE day_id = ?", (1,)
-    )
+    cursor = await db_conn.execute("SELECT COUNT(*) FROM slot WHERE day_id = ?", (1,))
     expected_slots = (await cursor.fetchone())[0]
 
     cursor = await db_conn.execute(
@@ -146,4 +146,3 @@ async def test_previous_session_data_is_preloaded(client, db_conn):
     assert resp.status_code == 200
     assert "Last time" in resp.text
     assert "100.0kg × 5 reps" in resp.text
-

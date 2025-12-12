@@ -1,6 +1,7 @@
 """
 Database connection dependency for FastAPI.
 """
+
 from typing import AsyncGenerator
 
 import aiosqlite
@@ -20,4 +21,3 @@ async def get_db(request: Request) -> AsyncGenerator[aiosqlite.Connection, None]
     async with aiosqlite.connect(str(db_path)) as db:
         db.row_factory = aiosqlite.Row
         yield db
-

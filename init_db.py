@@ -2,8 +2,8 @@
 """
 Initialize the Koifit database with schema and seed data.
 """
+
 import asyncio
-from pathlib import Path
 
 from koifit.db import init_database
 from koifit.settings import get_db_path

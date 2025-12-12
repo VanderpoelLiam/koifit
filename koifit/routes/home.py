@@ -1,6 +1,7 @@
 """
 Routes for the home and day selection pages.
 """
+
 import aiosqlite
 from fastapi import APIRouter, Depends
 from fastapi.responses import HTMLResponse
@@ -51,4 +52,3 @@ async def days_page(db: aiosqlite.Connection = Depends(get_db)):
     days = await cursor.fetchall()
     template = templates.get_template("pages/days.html")
     return HTMLResponse(template.render(days=[dict(day) for day in days]))
-

@@ -1,6 +1,7 @@
 """
 Utilities for creating and seeding the SQLite database.
 """
+
 from pathlib import Path
 
 import aiosqlite
@@ -45,4 +46,3 @@ async def ensure_database(db_path: Path) -> None:
     if db_path.exists():
         return
     await init_database(db_path, overwrite=False)
-

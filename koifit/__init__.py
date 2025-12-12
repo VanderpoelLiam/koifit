@@ -1,4 +1,3 @@
 """
 Koifit application package.
 """
-

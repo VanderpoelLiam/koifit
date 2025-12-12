@@ -76,4 +76,3 @@ CREATE INDEX IF NOT EXISTS idx_session_finished ON session(is_finished);
 CREATE INDEX IF NOT EXISTS idx_session_exercise_session ON session_exercise(session_id);
 CREATE INDEX IF NOT EXISTS idx_set_entry_session_exercise ON set_entry(session_exercise_id);
 CREATE INDEX IF NOT EXISTS idx_slot_day_ordinal ON slot(day_id, ordinal);
-

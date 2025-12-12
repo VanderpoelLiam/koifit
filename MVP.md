@@ -381,4 +381,3 @@ Health check endpoint.
 | 3 | DB Incline Curl | DB Incline Curl | 1 | 2 | 12-15 | 1.5 | 10 | 0 |
 | 4 | Triceps Pressdown | Triceps Pressdown | 1 | 2 | 12-15 | 1.5 | 10 | 0 |
 | 5 | Leg Extension | Leg Extension | 1 | 1 | 10-12 | 1.5 | 9-10 | 1 |
-
