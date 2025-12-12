@@ -1,7 +1,7 @@
 @layer components {
   .btn {
-    --btn-padding: var(--space-sm) var(--space-md);
-    --btn-border-radius: var(--radius-md);
+    --btn-padding: var(--space-xs) var(--space-md);
+    --btn-border-radius: var(--radius-sm);
     --btn-background: var(--color-bg);
     --btn-color: var(--color-ink);
     --btn-border-color: var(--color-border);
@@ -9,7 +9,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: var(--touch-target);
+    gap: 0.5rem;
+    min-height: 44px;
     padding: var(--btn-padding);
     font-size: var(--text-md);
     font-weight: 500;
@@ -23,45 +24,69 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  .btn:hover {
+    background-color: var(--color-bg-subtle);
+  }
+
   .btn:active {
-    transform: scale(0.98);
+    background-color: var(--color-border-subtle);
   }
 
   .btn:disabled,
   .btn[aria-busy="true"] {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
   }
 
+  /* Primary button with coral brand color */
   .btn--primary {
     --btn-background: var(--color-accent);
-    --btn-color: var(--color-bg);
+    --btn-color: white;
     --btn-border-color: var(--color-accent);
   }
 
+  .btn--primary:hover {
+    --btn-background: var(--color-accent-dark);
+    --btn-border-color: var(--color-accent-dark);
+  }
+
   .btn--primary:active {
-    background-color: color-mix(in oklch, var(--color-accent) 90%, black);
+    --btn-background: var(--color-accent-dark);
   }
 
+  /* Secondary button - minimal */
   .btn--secondary {
-    --btn-background: var(--color-border-subtle);
+    --btn-background: transparent;
     --btn-border-color: var(--color-border);
+    --btn-color: var(--color-ink);
   }
 
+  .btn--secondary:hover {
+    --btn-background: var(--color-bg-subtle);
+  }
+
+  /* Danger button */
   .btn--danger {
     --btn-background: var(--color-danger);
-    --btn-color: var(--color-bg);
+    --btn-color: white;
     --btn-border-color: var(--color-danger);
   }
 
+  /* Ghost button */
   .btn--ghost {
     --btn-background: transparent;
     --btn-border-color: transparent;
   }
 
+  .btn--ghost:hover {
+    --btn-background: var(--color-bg-subtle);
+  }
+
+  /* Finish workout button - prominent success action */
   .btn--finish {
     --btn-background: var(--color-success);
-    --btn-color: var(--color-bg);
+    --btn-color: white;
     --btn-border-color: transparent;
     --btn-border-radius: 0;
 
@@ -70,19 +95,25 @@
     left: 0;
     right: 0;
     width: 100%;
-    min-height: 64px;
-    padding: var(--space-md);
-    font-size: var(--text-lg);
-    font-weight: 600;
+    min-height: 56px;
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-md);
+    font-weight: 500;
     border: none;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -2px 12px hsl(var(--shadow-color) / 0.1);
     z-index: 100;
   }
 
-  .btn--finish:active {
-    background-color: color-mix(in oklch, var(--color-success) 90%, black);
+  .btn--finish:hover {
+    transform: none;
+    box-shadow: 0 -6px 32px hsl(var(--shadow-color) / 0.15);
   }
 
+  .btn--finish:active {
+    box-shadow: 0 -2px 16px hsl(var(--shadow-color) / 0.1);
+  }
+
+  /* Full width button */
   .btn--full-width {
     width: 100%;
   }

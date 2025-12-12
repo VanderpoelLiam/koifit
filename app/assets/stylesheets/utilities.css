@@ -1,4 +1,5 @@
 @layer utilities {
+  /* Layout utilities */
   .flex {
     display: flex;
   }
@@ -15,6 +16,10 @@
     align-items: center;
   }
 
+  .items-start {
+    align-items: flex-start;
+  }
+
   .justify-center {
     justify-content: center;
   }
@@ -23,6 +28,7 @@
     justify-content: space-between;
   }
 
+  /* Gap utilities with Zen spacing scale */
   .gap-xs {
     gap: var(--space-xs);
   }
@@ -39,6 +45,7 @@
     gap: var(--space-lg);
   }
 
+  /* Padding utilities */
   .pad-xs {
     padding: var(--space-xs);
   }
@@ -55,6 +62,7 @@
     padding: var(--space-lg);
   }
 
+  /* Stack layouts for vertical rhythm */
   .stack {
     display: flex;
     flex-direction: column;
@@ -72,10 +80,28 @@
     margin-block-start: var(--space-lg);
   }
 
+  .stack-xl > * + * {
+    margin-block-start: var(--space-xl);
+  }
+
+  /* Text alignment */
   .align-center {
     text-align: center;
   }
 
+  .text-center {
+    text-align: center;
+  }
+
+  .text-left {
+    text-align: left;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  /* Visibility */
   .hide {
     display: none;
   }
@@ -92,19 +118,64 @@
     border-width: 0;
   }
 
+  /* Typography utilities */
+  .text-xs {
+    font-size: var(--text-xs);
+  }
+
   .text-small {
     font-size: var(--text-sm);
+  }
+
+  .text-sm {
+    font-size: var(--text-sm);
+  }
+
+  .text-md {
+    font-size: var(--text-md);
+  }
+
+  .text-lg {
+    font-size: var(--text-lg);
   }
 
   .text-quiet {
     color: var(--color-ink-muted);
   }
 
-  .text-center {
-    text-align: center;
+  .text-muted {
+    color: var(--color-ink-muted);
   }
 
   .text-bold {
+    font-weight: 500;
+  }
+
+  .text-semibold {
     font-weight: 600;
   }
+
+  /* Color utilities aligned with coral palette */
+  .text-accent {
+    color: var(--color-accent);
+  }
+
+  .text-success {
+    color: var(--color-success);
+  }
+
+  .text-danger {
+    color: var(--color-danger);
+  }
+
+  /* Spacing utilities */
+  .mt-xs { margin-top: var(--space-xs); }
+  .mt-sm { margin-top: var(--space-sm); }
+  .mt-md { margin-top: var(--space-md); }
+  .mt-lg { margin-top: var(--space-lg); }
+
+  .mb-xs { margin-bottom: var(--space-xs); }
+  .mb-sm { margin-bottom: var(--space-sm); }
+  .mb-md { margin-bottom: var(--space-md); }
+  .mb-lg { margin-bottom: var(--space-lg); }
 }

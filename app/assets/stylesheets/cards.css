@@ -1,8 +1,8 @@
 @layer components {
   .card {
-    --card-padding: var(--space-md);
+    --card-padding: var(--space-sm);
     --card-background: var(--color-bg);
-    --card-border-color: var(--color-border);
+    --card-border-color: var(--color-border-subtle);
     --card-border-radius: var(--radius-md);
 
     padding: var(--card-padding);
@@ -12,31 +12,74 @@
     box-shadow: var(--shadow-soft);
   }
 
+  /* Highlighted card with coral accent */
   .card--highlight {
-    --card-color: var(--color-accent);
-    --card-border-color: var(--card-color);
-    box-shadow: var(--shadow-lifted);
+    --card-border-color: var(--color-accent);
+    box-shadow: var(--shadow-lifted),
+                0 0 0 1px oklch(var(--lch-coral) / 0.1);
   }
 
+  /* Muted card for less important content */
   .card--muted {
-    --card-background: var(--color-border-subtle);
+    --card-background: var(--color-bg-subtle);
     --card-border-color: var(--color-border-subtle);
+    box-shadow: none;
   }
 
-  /* Color derivation using color-mix() for themed cards */
+  /* Themed card with subtle coral tint */
   .card--themed {
-    --card-color: var(--color-accent);
-    --card-background: color-mix(in srgb, var(--card-color) 4%, var(--color-bg));
-    --card-border-color: color-mix(in srgb, var(--card-color) 33%, transparent);
+    --card-background: color-mix(in oklch, var(--color-accent) 3%, var(--color-bg));
+    --card-border-color: color-mix(in oklch, var(--color-accent) 15%, var(--color-border));
+    box-shadow: var(--shadow-soft);
   }
 
+  /* Interactive cards with smooth hover states */
   .card--interactive {
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: all var(--transition-default);
+  }
+
+  .card--interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lifted);
+    --card-border-color: var(--color-border);
   }
 
   .card--interactive:active {
-    transform: scale(0.98);
-    box-shadow: var(--shadow-soft);
+    transform: translateY(0);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Card with generous spacing for breathability */
+  .card--spacious {
+    --card-padding: var(--space-lg);
+  }
+
+  /* Card sections with visual separation */
+  .card__section {
+    padding-block: var(--space-sm);
+  }
+
+  .card__section + .card__section {
+    border-top: 1px solid var(--color-border-subtle);
+    margin-top: var(--space-sm);
+  }
+
+  /* Card header styling */
+  .card__header {
+    margin-bottom: var(--space-sm);
+  }
+
+  .card__title {
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  .card__subtitle {
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+    margin-top: var(--space-xs);
   }
 }

@@ -1,26 +1,35 @@
 @layer base {
   :root {
     /* Raw LCH values: Lightness, Chroma, Hue */
-    --lch-blue: 50% 0.2 250;
-    --lch-gray: 50% 0 0;
-    --lch-green: 60% 0.15 150;
-    --lch-red: 55% 0.2 20;
-    --lch-yellow: 75% 0.15 90;
+    /* Coral/Orange from logo - primary brand color */
+    --lch-coral: 68% 0.18 35;
+    --lch-coral-dark: 60% 0.16 35;
 
-    /* Base grayscale primitives */
-    --lch-bg: 98% 0 0;
-    --lch-ink: 15% 0 0;
-    --lch-ink-muted: 40% 0 0;
-    --lch-border: 85% 0 0;
-    --lch-border-subtle: 92% 0 0;
+    /* Supporting colors with Zen aesthetic */
+    --lch-green: 65% 0.12 145;
+    --lch-red: 60% 0.15 25;
+    --lch-blue: 60% 0.12 240;
+
+    /* Warm neutrals with subtle chroma for organic feel */
+    --lch-gray: 50% 0.01 35;
+
+    /* Base primitives with subtle warmth */
+    --lch-bg: 98% 0.005 35;
+    --lch-bg-subtle: 96% 0.008 35;
+    --lch-ink: 18% 0.01 35;
+    --lch-ink-muted: 45% 0.015 35;
+    --lch-border: 88% 0.01 35;
+    --lch-border-subtle: 94% 0.008 35;
 
     /* Semantic color tokens - Light mode */
     --color-bg: oklch(var(--lch-bg));
+    --color-bg-subtle: oklch(var(--lch-bg-subtle));
     --color-ink: oklch(var(--lch-ink));
     --color-ink-muted: oklch(var(--lch-ink-muted));
     --color-border: oklch(var(--lch-border));
     --color-border-subtle: oklch(var(--lch-border-subtle));
-    --color-accent: oklch(var(--lch-blue));
+    --color-accent: oklch(var(--lch-coral));
+    --color-accent-dark: oklch(var(--lch-coral-dark));
     --color-success: oklch(var(--lch-green));
     --color-danger: oklch(var(--lch-red));
     --color-info: oklch(var(--lch-blue));
@@ -29,22 +38,31 @@
     --color-effort-increase: oklch(var(--lch-green));
     --color-effort-decrease: oklch(var(--lch-red));
     --color-effort-good: oklch(var(--lch-gray));
+
+    /* Warm shadow tones for softer appearance */
+    --shadow-color: 25 15% 8%;
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
       /* Raw LCH values: Lightness, Chroma, Hue - Dark mode */
-      --lch-blue: 65% 0.2 250;
-      --lch-green: 70% 0.15 150;
-      --lch-red: 65% 0.2 20;
+      --lch-coral: 72% 0.16 35;
+      --lch-coral-dark: 65% 0.14 35;
+      --lch-green: 72% 0.12 145;
+      --lch-red: 68% 0.14 25;
+      --lch-blue: 70% 0.12 240;
 
-      /* Base grayscale primitives - Dark mode */
-      --lch-bg: 12% 0 0;
-      --lch-ink: 90% 0 0;
-      --lch-ink-muted: 60% 0 0;
-      --lch-border: 25% 0 0;
-      --lch-border-subtle: 18% 0 0;
-      --lch-gray: 60% 0 0;
+      /* Base grayscale primitives - Dark mode with warmth */
+      --lch-bg: 15% 0.01 35;
+      --lch-bg-subtle: 18% 0.012 35;
+      --lch-ink: 92% 0.008 35;
+      --lch-ink-muted: 65% 0.015 35;
+      --lch-border: 28% 0.015 35;
+      --lch-border-subtle: 20% 0.01 35;
+      --lch-gray: 65% 0.01 35;
+
+      /* Darker shadow for dark mode */
+      --shadow-color: 25 8% 4%;
     }
   }
 }

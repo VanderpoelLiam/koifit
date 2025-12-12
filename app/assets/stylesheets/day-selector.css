@@ -1,39 +1,55 @@
 @layer components {
   .day-selector {
-    padding: var(--space-md);
+    padding: var(--space-sm);
   }
 
   .day-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: var(--space-sm);
   }
 
+  /* Tappable day buttons */
   .day-item {
     display: block;
     width: 100%;
     min-height: var(--touch-target);
-    padding: var(--space-lg);
-    font-size: var(--text-xl);
-    font-weight: 600;
+    padding: var(--space-md) var(--space-sm);
+    font-size: var(--text-lg);
+    font-weight: 500;
     text-align: center;
     color: var(--color-ink);
     background-color: var(--color-bg);
-    border: 2px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
     cursor: pointer;
     transition: all var(--transition-fast);
     text-decoration: none;
     -webkit-tap-highlight-color: transparent;
   }
 
-  .day-item:active {
-    transform: scale(0.98);
-    background-color: var(--color-border-subtle);
-    border-color: var(--color-accent);
-  }
-
   .day-item:hover {
     border-color: var(--color-accent);
+    background-color: var(--color-bg-subtle);
+  }
+
+  .day-item:active {
+    border-color: var(--color-accent);
+    background-color: color-mix(in oklch, var(--color-accent) 5%, var(--color-bg));
+  }
+
+  /* Stack layout helper for day selector page */
+  .stack {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stack-lg > * + * {
+    margin-block-start: var(--space-md);
+  }
+
+  .text-quiet {
+    color: var(--color-ink-muted);
+    font-size: var(--text-sm);
   }
 }
