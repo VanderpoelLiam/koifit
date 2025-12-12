@@ -1,20 +1,33 @@
 @layer components {
   .card {
-    padding: var(--space-md);
-    background-color: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    --card-padding: var(--space-md);
+    --card-background: var(--color-bg);
+    --card-border-color: var(--color-border);
+    --card-border-radius: var(--radius-md);
+
+    padding: var(--card-padding);
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border-color);
+    border-radius: var(--card-border-radius);
     box-shadow: var(--shadow-soft);
   }
 
   .card--highlight {
-    border-color: var(--color-accent);
+    --card-color: var(--color-accent);
+    --card-border-color: var(--card-color);
     box-shadow: var(--shadow-lifted);
   }
 
   .card--muted {
-    background-color: var(--color-border-subtle);
-    border-color: var(--color-border-subtle);
+    --card-background: var(--color-border-subtle);
+    --card-border-color: var(--color-border-subtle);
+  }
+
+  /* Color derivation using color-mix() for themed cards */
+  .card--themed {
+    --card-color: var(--color-accent);
+    --card-background: color-mix(in srgb, var(--card-color) 4%, var(--color-bg));
+    --card-border-color: color-mix(in srgb, var(--card-color) 33%, transparent);
   }
 
   .card--interactive {

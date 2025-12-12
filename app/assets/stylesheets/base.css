@@ -1,8 +1,10 @@
 @layer base {
   :root {
-    /* Spacing */
-    --space-inline: 1ch;
-    --space-block: 1rem;
+    /* Spacing - Character-based horizontal, rem-based vertical */
+    --inline-space: 1ch;      /* Horizontal spacing (character-based) */
+    --block-space: 1rem;      /* Vertical spacing */
+
+    /* Spacing scale */
     --space-xs: 0.5rem;
     --space-sm: 1rem;
     --space-md: 1.5rem;

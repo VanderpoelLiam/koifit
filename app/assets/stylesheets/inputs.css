@@ -1,19 +1,25 @@
 @layer components {
   .input {
+    --input-padding: var(--space-sm) var(--space-md);
+    --input-background: var(--color-bg);
+    --input-color: var(--color-ink);
+    --input-border-color: var(--color-border);
+    --input-border-radius: var(--radius-md);
+
     width: 100%;
     min-height: var(--touch-target);
-    padding: var(--space-sm) var(--space-md);
+    padding: var(--input-padding);
     font-size: var(--text-md);
-    color: var(--color-ink);
-    background-color: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    color: var(--input-color);
+    background-color: var(--input-background);
+    border: 1px solid var(--input-border-color);
+    border-radius: var(--input-border-radius);
     transition: border-color var(--transition-fast);
   }
 
   .input:focus {
+    --input-border-color: var(--color-accent);
     outline: none;
-    border-color: var(--color-accent);
     box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-accent) 20%, transparent);
   }
 
@@ -33,22 +39,28 @@
   }
 
   .textarea {
+    --textarea-padding: var(--space-sm) var(--space-md);
+    --textarea-background: var(--color-bg);
+    --textarea-color: var(--color-ink);
+    --textarea-border-color: var(--color-border);
+    --textarea-border-radius: var(--radius-md);
+
     width: 100%;
     min-height: 80px;
-    padding: var(--space-sm) var(--space-md);
+    padding: var(--textarea-padding);
     font-size: var(--text-md);
     font-family: inherit;
-    color: var(--color-ink);
-    background-color: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    color: var(--textarea-color);
+    background-color: var(--textarea-background);
+    border: 1px solid var(--textarea-border-color);
+    border-radius: var(--textarea-border-radius);
     resize: vertical;
     transition: border-color var(--transition-fast);
   }
 
   .textarea:focus {
+    --textarea-border-color: var(--color-accent);
     outline: none;
-    border-color: var(--color-accent);
     box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-accent) 20%, transparent);
   }
 

@@ -1,16 +1,22 @@
 @layer components {
   .btn {
+    --btn-padding: var(--space-sm) var(--space-md);
+    --btn-border-radius: var(--radius-md);
+    --btn-background: var(--color-bg);
+    --btn-color: var(--color-ink);
+    --btn-border-color: var(--color-border);
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: var(--touch-target);
-    padding: var(--space-sm) var(--space-md);
+    padding: var(--btn-padding);
     font-size: var(--text-md);
     font-weight: 500;
-    color: var(--color-ink);
-    background-color: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    color: var(--btn-color);
+    background-color: var(--btn-background);
+    border: 1px solid var(--btn-border-color);
+    border-radius: var(--btn-border-radius);
     cursor: pointer;
     transition: all var(--transition-fast);
     text-decoration: none;
@@ -28,9 +34,9 @@
   }
 
   .btn--primary {
-    color: var(--color-bg);
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
+    --btn-background: var(--color-accent);
+    --btn-color: var(--color-bg);
+    --btn-border-color: var(--color-accent);
   }
 
   .btn--primary:active {
@@ -38,22 +44,27 @@
   }
 
   .btn--secondary {
-    background-color: var(--color-border-subtle);
-    border-color: var(--color-border);
+    --btn-background: var(--color-border-subtle);
+    --btn-border-color: var(--color-border);
   }
 
   .btn--danger {
-    color: var(--color-bg);
-    background-color: var(--color-danger);
-    border-color: var(--color-danger);
+    --btn-background: var(--color-danger);
+    --btn-color: var(--color-bg);
+    --btn-border-color: var(--color-danger);
   }
 
   .btn--ghost {
-    background-color: transparent;
-    border-color: transparent;
+    --btn-background: transparent;
+    --btn-border-color: transparent;
   }
 
   .btn--finish {
+    --btn-background: var(--color-success);
+    --btn-color: var(--color-bg);
+    --btn-border-color: transparent;
+    --btn-border-radius: 0;
+
     position: fixed;
     bottom: 0;
     left: 0;
@@ -63,10 +74,7 @@
     padding: var(--space-md);
     font-size: var(--text-lg);
     font-weight: 600;
-    color: var(--color-bg);
-    background-color: var(--color-success);
     border: none;
-    border-radius: 0;
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
     z-index: 100;
   }

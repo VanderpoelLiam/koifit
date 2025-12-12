@@ -1,46 +1,50 @@
 @layer base {
   :root {
-    /* Raw OKLCH colors */
-    --lch-blue: oklch(0.5 0.2 250);
-    --lch-gray: oklch(0.5 0 0);
-    --lch-green: oklch(0.6 0.15 150);
-    --lch-red: oklch(0.55 0.2 20);
-    --lch-yellow: oklch(0.75 0.15 90);
+    /* Raw LCH values: Lightness, Chroma, Hue */
+    --lch-blue: 50% 0.2 250;
+    --lch-gray: 50% 0 0;
+    --lch-green: 60% 0.15 150;
+    --lch-red: 55% 0.2 20;
+    --lch-yellow: 75% 0.15 90;
+
+    /* Base grayscale primitives */
+    --lch-bg: 98% 0 0;
+    --lch-ink: 15% 0 0;
+    --lch-ink-muted: 40% 0 0;
+    --lch-border: 85% 0 0;
+    --lch-border-subtle: 92% 0 0;
 
     /* Semantic color tokens - Light mode */
-    --color-bg: oklch(0.98 0 0);
-    --color-ink: oklch(0.15 0 0);
-    --color-ink-muted: oklch(0.4 0 0);
-    --color-border: oklch(0.85 0 0);
-    --color-border-subtle: oklch(0.92 0 0);
-    --color-accent: oklch(0.5 0.2 250);
-    --color-success: oklch(0.6 0.15 150);
-    --color-danger: oklch(0.55 0.2 20);
-    --color-info: oklch(0.5 0.2 250);
+    --color-bg: oklch(var(--lch-bg));
+    --color-ink: oklch(var(--lch-ink));
+    --color-ink-muted: oklch(var(--lch-ink-muted));
+    --color-border: oklch(var(--lch-border));
+    --color-border-subtle: oklch(var(--lch-border-subtle));
+    --color-accent: oklch(var(--lch-blue));
+    --color-success: oklch(var(--lch-green));
+    --color-danger: oklch(var(--lch-red));
+    --color-info: oklch(var(--lch-blue));
 
     /* Effort tag colors */
-    --color-effort-increase: oklch(0.6 0.15 150);
-    --color-effort-decrease: oklch(0.55 0.2 20);
-    --color-effort-good: oklch(0.5 0 0);
+    --color-effort-increase: oklch(var(--lch-green));
+    --color-effort-decrease: oklch(var(--lch-red));
+    --color-effort-good: oklch(var(--lch-gray));
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      /* Semantic color tokens - Dark mode */
-      --color-bg: oklch(0.12 0 0);
-      --color-ink: oklch(0.9 0 0);
-      --color-ink-muted: oklch(0.6 0 0);
-      --color-border: oklch(0.25 0 0);
-      --color-border-subtle: oklch(0.18 0 0);
-      --color-accent: oklch(0.65 0.2 250);
-      --color-success: oklch(0.7 0.15 150);
-      --color-danger: oklch(0.65 0.2 20);
-      --color-info: oklch(0.65 0.2 250);
+      /* Raw LCH values: Lightness, Chroma, Hue - Dark mode */
+      --lch-blue: 65% 0.2 250;
+      --lch-green: 70% 0.15 150;
+      --lch-red: 65% 0.2 20;
 
-      /* Effort tag colors - Dark mode */
-      --color-effort-increase: oklch(0.7 0.15 150);
-      --color-effort-decrease: oklch(0.65 0.2 20);
-      --color-effort-good: oklch(0.6 0 0);
+      /* Base grayscale primitives - Dark mode */
+      --lch-bg: 12% 0 0;
+      --lch-ink: 90% 0 0;
+      --lch-ink-muted: 60% 0 0;
+      --lch-border: 25% 0 0;
+      --lch-border-subtle: 18% 0 0;
+      --lch-gray: 60% 0 0;
     }
   }
 }
