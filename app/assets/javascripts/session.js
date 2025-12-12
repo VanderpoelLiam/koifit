@@ -325,9 +325,24 @@ class SessionManager {
       });
     }
 
+    // Timer config for this exercise
+    const restSeconds = parseInt(card.dataset.restSeconds) || 0;
+    const hasDropset = card.dataset.hasDropset === "1";
+    const workingSetsCount = parseInt(card.dataset.workingSets) || 0;
+
+    // Setup warmup checkbox (start timer after warmups)
+    const warmupCheckbox = card.querySelector(".warmup-done");
+    if (warmupCheckbox) {
+      warmupCheckbox.addEventListener("change", () => {
+        // Start rest timer when warmups are done (rest before first working set)
+        if (warmupCheckbox.checked && restSeconds > 0) {
+          this.restTimer.start(restSeconds);
+        }
+      });
+    }
+
     // Setup set completion checkboxes (immediate + start timer)
     const doneCheckboxes = card.querySelectorAll(".set-done");
-    const restSeconds = parseInt(card.dataset.restSeconds) || 0;
     doneCheckboxes.forEach((checkbox) => {
       checkbox.addEventListener("change", () => {
         const data = this.collectExerciseData(card, false);
@@ -335,12 +350,20 @@ class SessionManager {
 
         // Start rest timer when checking a set as done
         if (checkbox.checked && restSeconds > 0) {
+          const setNumber = parseInt(checkbox.dataset.setNumber);
+          const isLastSet = setNumber === workingSetsCount;
+
+          // Don't start timer on last set if there's a dropset (dropset comes immediately)
+          if (isLastSet && hasDropset) {
+            return;
+          }
+
           this.restTimer.start(restSeconds);
         }
       });
     });
 
-    // Setup dropset checkbox (immediate)
+    // Setup dropset checkbox (immediate, no timer - exercise is done)
     const dropsetCheckbox = card.querySelector(".dropset-done");
     if (dropsetCheckbox) {
       dropsetCheckbox.addEventListener("change", () => {

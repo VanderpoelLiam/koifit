@@ -13,7 +13,7 @@
 
     <div class="session-exercises">
         {% for se in session_exercises %}
-        <div class="exercise-card card" data-session-exercise-id="{{ se.id }}" data-rest-seconds="{{ (se.slot.rest_minutes * 60)|int }}">
+        <div class="exercise-card card" data-session-exercise-id="{{ se.id }}" data-rest-seconds="{{ (se.slot.rest_minutes * 60)|int }}" data-has-dropset="{{ se.slot.has_dropset }}" data-working-sets="{{ se.slot.working_sets_count }}">
             <div class="exercise-card__header">
                 <h2 class="exercise-card__title">{{ se.slot.title }}</h2>
                 <div class="exercise-card__meta">
@@ -60,7 +60,7 @@
             {% if se.slot.warmup_sets != "0" %}
             <div class="exercise-card__warmup">
                 <label class="checkbox-label">
-                    <input type="checkbox" class="checkbox" id="warmup-{{ se.id }}" />
+                    <input type="checkbox" class="checkbox warmup-done" id="warmup-{{ se.id }}" />
                     <span>{{ se.slot.warmup_sets }} warmup sets</span>
                 </label>
             </div>
