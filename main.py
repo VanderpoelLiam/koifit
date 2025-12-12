@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 
 import aiosqlite
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from koifit.db import ensure_database
@@ -42,6 +43,25 @@ def create_app(db_path=None):
     async def health():
         """Health check endpoint."""
         return {"status": "ok"}
+
+    @app.get("/favicon.ico")
+    async def favicon():
+        """Serve favicon."""
+        return RedirectResponse(url="/assets/images/favicon.png", status_code=301)
+
+    @app.get("/apple-touch-icon.png")
+    async def apple_touch_icon():
+        """Serve Apple touch icon."""
+        return RedirectResponse(
+            url="/assets/images/apple-touch-icon.png", status_code=301
+        )
+
+    @app.get("/apple-touch-icon-precomposed.png")
+    async def apple_touch_icon_precomposed():
+        """Serve Apple touch icon (precomposed)."""
+        return RedirectResponse(
+            url="/assets/images/apple-touch-icon.png", status_code=301
+        )
 
     return app
 
