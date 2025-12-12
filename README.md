@@ -43,3 +43,29 @@ This mounts a persistent volume at `/app/db` and sets `KOIFIT_DB_PATH` automatic
 docker build -t koifit .
 docker run -p 8000:8000 -e KOIFIT_DB_PATH=/app/db/db.sqlite -v koifit_db:/app/db koifit
 ```
+
+## PWA & iOS Timer Notifications
+
+Koifit works as a Progressive Web App (PWA) with background timer notifications on iOS.
+
+### Installation (iOS)
+
+1. Open Koifit in your browser
+2. Tap the **Share** button
+3. Scroll down and tap **"Add to Home Screen"**
+4. Tap **"Add"**
+5. Open Koifit from your home screen
+6. **Allow notifications** when prompted
+
+Once installed, rest timer notifications will work even when you switch to other apps.
+
+### PWA Requirements
+
+The PWA functionality requires these files:
+
+- `app/assets/manifest.json` - PWA manifest with app metadata
+- `app/assets/sw.js` - Service Worker for background timer notifications
+- `app/assets/images/icon-192.png` - App icon (192x192)
+- `app/assets/images/icon-512.png` - App icon (512x512)
+
+The icons should be PNG files with the Koifit logo on a transparent background.

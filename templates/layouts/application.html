@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Koifit - Self-hosted workout tracker">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Koifit">
+    <meta name="theme-color" content="#E8875B">
+    <link rel="manifest" href="/assets/manifest.json">
+    <link rel="apple-touch-icon" href="/assets/images/icon-192.png">
     <title>{% block title %}Koifit{% endblock %}</title>
 
     <!-- CSS Layers -->
@@ -25,12 +31,68 @@
     <link rel="stylesheet" href="/assets/stylesheets/set-table.css">
     <link rel="stylesheet" href="/assets/stylesheets/day-selector.css">
     <link rel="stylesheet" href="/assets/stylesheets/modal.css">
+    <link rel="stylesheet" href="/assets/stylesheets/rest-timer.css">
+    <link rel="stylesheet" href="/assets/stylesheets/pwa-install.css">
 
     {% block extra_head %}{% endblock %}
 </head>
 <body>
     {% block content %}{% endblock %}
 
+    <!-- PWA Install Banner (iOS) -->
+    <div class="pwa-install-banner" id="pwa-install-banner" hidden>
+      <div class="pwa-install-banner__content">
+        <h3 class="pwa-install-banner__title">Install for Notifications</h3>
+        <p class="pwa-install-banner__text">Add to home screen for timer alerts:</p>
+        <ol class="pwa-install-banner__steps">
+          <li>Tap <strong>Share</strong></li>
+          <li>Tap <strong>Add to Home Screen</strong></li>
+        </ol>
+        <div class="pwa-install-banner__actions">
+          <button class="pwa-install-banner__btn pwa-install-banner__btn--secondary" id="pwa-dismiss">Later</button>
+          <button class="pwa-install-banner__btn pwa-install-banner__btn--primary" id="pwa-done">Done</button>
+        </div>
+      </div>
+    </div>
+
     {% block scripts %}{% endblock %}
+
+    <script>
+      // Register Service Worker for PWA
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/assets/sw.js").then((reg) => {
+          console.log("Service Worker registered");
+        }).catch((err) => {
+          console.log("Service Worker registration failed:", err);
+        });
+      }
+
+      // PWA Install prompt for iOS
+      (function() {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isStandalone = window.navigator.standalone === true;
+        const dismissed = localStorage.getItem("pwa-install-dismissed");
+        const banner = document.getElementById("pwa-install-banner");
+
+        // Show banner on iOS if not installed and not dismissed
+        if (isIOS && !isStandalone && !dismissed && banner) {
+          // Delay showing to not be too aggressive
+          setTimeout(() => {
+            banner.hidden = false;
+          }, 2000);
+
+          document.getElementById("pwa-dismiss").addEventListener("click", () => {
+            localStorage.setItem("pwa-install-dismissed", Date.now());
+            banner.hidden = true;
+          });
+
+          document.getElementById("pwa-done").addEventListener("click", () => {
+            localStorage.setItem("pwa-install-dismissed", "installed");
+            banner.hidden = true;
+            alert("Open Koifit from your home screen to enable notifications.");
+          });
+        }
+      })();
+    </script>
 </body>
 </html>

@@ -3,10 +3,276 @@
  */
 import { AutoSave } from "./auto-save.js";
 
+class RestTimer {
+  static STORAGE_KEY = "koifit_rest_timer";
+
+  constructor() {
+    this.timerElement = document.getElementById("rest-timer");
+    this.timeDisplay = document.getElementById("timer-time");
+    this.skipButton = document.getElementById("timer-skip");
+    this.intervalId = null;
+    this.remainingSeconds = 0;
+    this.totalSeconds = 0;
+    this.endTime = null;
+
+    if (this.skipButton) {
+      this.skipButton.addEventListener("click", () => this.stop());
+    }
+
+    // Request notification permission on first interaction
+    this.requestNotificationPermission();
+
+    // Handle visibility changes (app switching on mobile)
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        this.handleVisibilityReturn();
+      }
+    });
+
+    // Resume timer if one was active
+    this.resumeFromStorage();
+  }
+
+  // Request notification permission (for PWA)
+  async requestNotificationPermissionPWA() {
+    if (!("Notification" in window)) return;
+
+    if (Notification.permission === "default") {
+      const permission = await Notification.requestPermission();
+      console.log("Notification permission:", permission);
+    }
+  }
+
+  // Send timer to Service Worker for background notifications
+  startServiceWorkerTimer(seconds) {
+    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: "START_TIMER",
+        data: { seconds }
+      });
+      console.log("Timer sent to Service Worker");
+    }
+  }
+
+  stopServiceWorkerTimer() {
+    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: "STOP_TIMER"
+      });
+    }
+  }
+
+  requestNotificationPermission() {
+    if ("Notification" in window && Notification.permission === "default") {
+      // Request on first user interaction
+      const requestOnInteraction = () => {
+        Notification.requestPermission();
+        document.removeEventListener("click", requestOnInteraction);
+      };
+      document.addEventListener("click", requestOnInteraction, { once: true });
+    }
+  }
+
+  handleVisibilityReturn() {
+    // When user returns to the page, check if timer should still be running
+    const stored = localStorage.getItem(RestTimer.STORAGE_KEY);
+    if (!stored) return;
+
+    try {
+      const { endTime } = JSON.parse(stored);
+      const remaining = Math.ceil((endTime - Date.now()) / 1000);
+
+      if (remaining <= 0) {
+        // Timer finished while away
+        this.complete();
+      } else {
+        // Update display with correct remaining time
+        this.remainingSeconds = remaining;
+        this.updateDisplay();
+      }
+    } catch (e) {
+      // Ignore errors
+    }
+  }
+
+  start(seconds) {
+    // Request notification permission on first timer start
+    this.requestNotificationPermissionPWA();
+
+    this.stop(); // Clear any existing timer
+
+    // Store the end time so we can resume after navigation
+    const endTime = Date.now() + seconds * 1000;
+    localStorage.setItem(RestTimer.STORAGE_KEY, JSON.stringify({ endTime }));
+
+    // Also start timer in Service Worker for background notifications
+    this.startServiceWorkerTimer(seconds);
+
+    this.remainingSeconds = seconds;
+    this.totalSeconds = seconds;
+    this.timerElement.hidden = false;
+    this.timerElement.classList.remove("rest-timer--complete");
+    this.updateDisplay();
+
+    this.intervalId = setInterval(() => {
+      this.tick();
+    }, 1000);
+  }
+
+  resumeFromStorage() {
+    const stored = localStorage.getItem(RestTimer.STORAGE_KEY);
+    if (!stored) return;
+
+    try {
+      const { endTime } = JSON.parse(stored);
+      const remaining = Math.ceil((endTime - Date.now()) / 1000);
+
+      if (remaining > 0) {
+        this.remainingSeconds = remaining;
+        this.timerElement.hidden = false;
+        this.timerElement.classList.remove("rest-timer--complete");
+        this.updateDisplay();
+
+        this.intervalId = setInterval(() => {
+          this.tick();
+        }, 1000);
+      } else if (remaining > -3) {
+        // Timer just finished while away - show completion briefly
+        this.showComplete();
+      } else {
+        // Timer finished a while ago - clean up
+        localStorage.removeItem(RestTimer.STORAGE_KEY);
+      }
+    } catch (e) {
+      localStorage.removeItem(RestTimer.STORAGE_KEY);
+    }
+  }
+
+  tick() {
+    this.remainingSeconds--;
+    this.updateDisplay();
+
+    if (this.remainingSeconds <= 0) {
+      this.complete();
+    }
+  }
+
+  stop() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+    localStorage.removeItem(RestTimer.STORAGE_KEY);
+    this.stopServiceWorkerTimer();
+    this.timerElement.hidden = true;
+    this.timerElement.classList.remove("rest-timer--complete");
+  }
+
+  complete() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+    localStorage.removeItem(RestTimer.STORAGE_KEY);
+    this.showComplete();
+  }
+
+  showComplete() {
+    this.timerElement.hidden = false;
+    this.timerElement.classList.add("rest-timer--complete");
+    this.timeDisplay.textContent = "Done!";
+
+    // Play sound
+    this.playBeep();
+
+    // Vibrate if supported
+    if (navigator.vibrate) {
+      navigator.vibrate([200, 100, 200]);
+    }
+
+    // Show notification (works even if app is in background on some devices)
+    this.showNotification();
+
+    // Auto-hide after 3 seconds
+    setTimeout(() => this.stop(), 3000);
+  }
+
+  playBeep() {
+    if (!this.audioContext || !this.audioUnlocked) {
+      console.log("Audio not unlocked, cannot play beep");
+      return;
+    }
+
+    try {
+      // Resume context if it got suspended
+      if (this.audioContext.state === "suspended") {
+        this.audioContext.resume();
+      }
+
+      const playTone = (startTime, frequency, duration) => {
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+
+        oscillator.frequency.value = frequency;
+        oscillator.type = "sine";
+
+        // Fade in and out to avoid clicks
+        gainNode.gain.setValueAtTime(0, startTime);
+        gainNode.gain.linearRampToValueAtTime(0.5, startTime + 0.01);
+        gainNode.gain.linearRampToValueAtTime(0, startTime + duration);
+
+        oscillator.start(startTime);
+        oscillator.stop(startTime + duration);
+      };
+
+      const now = this.audioContext.currentTime;
+      playTone(now, 880, 0.15);        // A5 - first beep
+      playTone(now + 0.2, 880, 0.15);  // A5 - second beep
+      playTone(now + 0.4, 1108, 0.25); // C#6 - higher final beep
+    } catch (e) {
+      console.log("Audio playback error:", e);
+    }
+  }
+
+  showNotification() {
+    if ("Notification" in window && Notification.permission === "granted") {
+      try {
+        const notification = new Notification("Rest Complete", {
+          icon: "/assets/images/logo-icon.svg",
+          tag: "rest-timer", // Replaces existing notification
+          requireInteraction: false,
+          silent: false, // Allow sound
+        });
+
+        // Auto-close notification after 5 seconds
+        setTimeout(() => notification.close(), 5000);
+
+        // Focus window when notification clicked
+        notification.onclick = () => {
+          window.focus();
+          notification.close();
+        };
+      } catch (e) {
+        // Notifications not supported in this context
+      }
+    }
+  }
+
+  updateDisplay() {
+    const mins = Math.floor(this.remainingSeconds / 60);
+    const secs = this.remainingSeconds % 60;
+    this.timeDisplay.textContent = `${mins}:${secs.toString().padStart(2, "0")}`;
+  }
+}
+
 class SessionManager {
   constructor() {
     this.sessionId = this.getSessionId();
     this.autoSavers = new Map();
+    this.restTimer = new RestTimer();
     this.init();
   }
 
@@ -59,12 +325,18 @@ class SessionManager {
       });
     }
 
-    // Setup set completion checkboxes (immediate)
+    // Setup set completion checkboxes (immediate + start timer)
     const doneCheckboxes = card.querySelectorAll(".set-done");
+    const restSeconds = parseInt(card.dataset.restSeconds) || 0;
     doneCheckboxes.forEach((checkbox) => {
       checkbox.addEventListener("change", () => {
         const data = this.collectExerciseData(card, false);
         autoSave.saveImmediate(data);
+
+        // Start rest timer when checking a set as done
+        if (checkbox.checked && restSeconds > 0) {
+          this.restTimer.start(restSeconds);
+        }
       });
     });
 
@@ -243,7 +515,7 @@ class SessionManager {
         window.location.href = result.redirect || "/";
       } catch (error) {
         console.error("Finish error:", error);
-        alert("Error finishing workout. Please try again.");
+        alert("Error finishing. Try again.");
         finishButton.disabled = false;
         finishButton.textContent = "Finish Workout";
       }

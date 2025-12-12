@@ -13,7 +13,7 @@
 
     <div class="session-exercises">
         {% for se in session_exercises %}
-        <div class="exercise-card card" data-session-exercise-id="{{ se.id }}">
+        <div class="exercise-card card" data-session-exercise-id="{{ se.id }}" data-rest-seconds="{{ (se.slot.rest_minutes * 60)|int }}">
             <div class="exercise-card__header">
                 <h2 class="exercise-card__title">{{ se.slot.title }}</h2>
                 <div class="exercise-card__meta">
@@ -149,6 +149,14 @@
 </main>
 
 <button class="btn btn--finish" id="finish-workout">Finish Workout</button>
+
+<!-- Rest Timer -->
+<div class="rest-timer" id="rest-timer" hidden>
+    <div class="rest-timer__display">
+        <span class="rest-timer__time" id="timer-time">0:00</span>
+    </div>
+    <button type="button" class="rest-timer__skip" id="timer-skip" aria-label="Skip timer">✕</button>
+</div>
 
 <!-- Finish Workout Confirmation Modal -->
 <div class="modal-backdrop" id="modal-backdrop"></div>
