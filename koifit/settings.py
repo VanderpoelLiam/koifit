@@ -15,10 +15,10 @@ def get_db_path():
     """
     Resolve the SQLite database path.
 
-    Prefers KOIFIT_DB_PATH env var, otherwise defaults to ./db/db.sqlite
-    relative to the project root.
+    Prefers KOIFIT_DB_PATH env var, otherwise defaults to ./db.sqlite
+    at the project root.
     """
     env_path = os.environ.get("KOIFIT_DB_PATH")
     if env_path:
         return Path(env_path)
-    return get_project_root() / "db" / "db.sqlite"
+    return get_project_root() / "db.sqlite"
