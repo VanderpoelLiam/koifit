@@ -24,6 +24,17 @@ test:
 serve:
     uv run uvicorn main:app --reload
 
+# Serve the app over tailscale, available at https://<tailnet-device-name>.<tailnet-dns-name> e.g.  https://lovely-laptop.tigris-tigerfish.ts.net
+serve-tailscale:
+    #!/usr/bin/env bash
+    set -e
+    # Start tailscale serve in background
+    tailscale serve --bg 8000
+    # Trap to reset tailscale serve when script exits
+    trap "tailscale serve reset" EXIT INT TERM
+    # Start uvicorn (this will block until interrupted)
+    uv run uvicorn main:app --reload
+
 # Reset database (purge and reinitialize from schema + seed)
 db-reset:
     uv run python init_db.py
