@@ -90,45 +90,53 @@
     left: 0;
     right: 0;
     display: flex;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
     z-index: 100;
-    box-shadow: 0 -2px 12px hsl(var(--shadow-color) / 0.1);
+    background-color: var(--color-bg);
   }
 
   /* Finish workout button - prominent action with coral accent */
   .btn--finish {
     --btn-background: var(--color-accent);
     --btn-color: white;
-    --btn-border-color: transparent;
-    --btn-border-radius: 0;
+    --btn-border-color: var(--color-accent);
+    --btn-border-radius: var(--radius-sm);
 
     flex: 1;
-    min-height: 56px;
+    min-height: 64px;
     padding: var(--space-sm) var(--space-md);
     font-size: var(--text-md);
     font-weight: 500;
-    border: none;
+    border: 1px solid var(--color-accent);
+    box-shadow: var(--shadow-card);
   }
 
   .btn--finish:hover {
+    --btn-background: var(--color-accent-dark);
+    --btn-border-color: var(--color-accent-dark);
     transform: none;
   }
 
   /* Discard workout button */
   .btn--discard {
-    --btn-background: var(--color-bg-subtle);
+    --btn-background: var(--color-bg);
     --btn-color: var(--color-ink-muted);
-    --btn-border-color: transparent;
-    --btn-border-radius: 0;
+    --btn-border-color: var(--color-border);
+    --btn-border-radius: var(--radius-sm);
 
-    min-height: 56px;
+    flex: 1;
+    min-height: 64px;
     padding: var(--space-sm) var(--space-lg);
     font-size: var(--text-sm);
     font-weight: 400;
-    border: none;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
   }
 
   .btn--discard:hover {
-    --btn-background: var(--color-border-subtle);
+    --btn-background: var(--color-bg-subtle);
+    --btn-border-color: var(--color-border);
     transform: none;
   }
 

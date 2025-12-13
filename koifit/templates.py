@@ -25,8 +25,27 @@ def format_weight(weight: float) -> str:
     return str(weight)
 
 
+def format_warmup_sets(warmup_sets: str) -> str:
+    """Format warmup sets: '2-3' → 'Warmup: 2-3 sets', '1' → 'Warmup: 1 set'."""
+    if "-" in warmup_sets:
+        # Range like "2-3"
+        return f"Warmup: {warmup_sets} sets"
+    else:
+        # Single number
+        try:
+            num = int(warmup_sets)
+            if num == 1:
+                return "Warmup: 1 set"
+            else:
+                return f"Warmup: {warmup_sets} sets"
+        except ValueError:
+            # Fallback for any other format
+            return f"Warmup: {warmup_sets} sets"
+
+
 templates = Environment(loader=FileSystemLoader("templates"), autoescape=True)
 templates.filters["rest_time"] = format_rest_time
 templates.filters["weight"] = format_weight
+templates.filters["warmup_sets"] = format_warmup_sets
 
 __all__ = ["templates"]

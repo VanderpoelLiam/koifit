@@ -197,8 +197,9 @@
   }
 
   .weight-change__btn[aria-pressed="true"]:hover {
-    background-color: var(--color-accent-dark);
-    border-color: var(--color-accent-dark);
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    opacity: 0.9;
   }
 
   /* Visual state indicator - subtle left border when in progress */

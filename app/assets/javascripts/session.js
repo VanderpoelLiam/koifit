@@ -9,6 +9,9 @@ class RestTimer {
   constructor() {
     this.timerElement = document.getElementById("rest-timer");
     this.timeDisplay = document.getElementById("timer-time");
+    this.headerTimerDisplay = document.getElementById("header-rest-timer");
+    this.headerTimerTime = document.getElementById("header-rest-timer-time");
+    this.headerSkipButton = document.getElementById("header-rest-timer-skip");
     this.skipButton = document.getElementById("timer-skip");
     this.intervalId = null;
     this.remainingSeconds = 0;
@@ -17,6 +20,10 @@ class RestTimer {
 
     if (this.skipButton) {
       this.skipButton.addEventListener("click", () => this.stop());
+    }
+
+    if (this.headerSkipButton) {
+      this.headerSkipButton.addEventListener("click", () => this.stop());
     }
 
     // Request notification permission on first interaction
@@ -110,8 +117,12 @@ class RestTimer {
 
     this.remainingSeconds = seconds;
     this.totalSeconds = seconds;
-    this.timerElement.hidden = false;
-    this.timerElement.classList.remove("rest-timer--complete");
+    if (this.timerElement) {
+      this.timerElement.hidden = true; // Hide floating timer, use header instead
+    }
+    if (this.headerTimerDisplay) {
+      this.headerTimerDisplay.hidden = false;
+    }
     this.updateDisplay();
 
     this.intervalId = setInterval(() => {
@@ -129,8 +140,12 @@ class RestTimer {
 
       if (remaining > 0) {
         this.remainingSeconds = remaining;
-        this.timerElement.hidden = false;
-        this.timerElement.classList.remove("rest-timer--complete");
+        if (this.timerElement) {
+          this.timerElement.hidden = true; // Hide floating timer
+        }
+        if (this.headerTimerDisplay) {
+          this.headerTimerDisplay.hidden = false;
+        }
         this.updateDisplay();
 
         this.intervalId = setInterval(() => {
@@ -164,8 +179,13 @@ class RestTimer {
     }
     localStorage.removeItem(RestTimer.STORAGE_KEY);
     this.stopServiceWorkerTimer();
-    this.timerElement.hidden = true;
-    this.timerElement.classList.remove("rest-timer--complete");
+    if (this.timerElement) {
+      this.timerElement.hidden = true;
+      this.timerElement.classList.remove("rest-timer--complete");
+    }
+    if (this.headerTimerDisplay) {
+      this.headerTimerDisplay.hidden = true;
+    }
   }
 
   complete() {
@@ -178,9 +198,12 @@ class RestTimer {
   }
 
   showComplete() {
-    this.timerElement.hidden = false;
-    this.timerElement.classList.add("rest-timer--complete");
-    this.timeDisplay.textContent = "Done!";
+    if (this.headerTimerTime) {
+      this.headerTimerTime.textContent = "Done!";
+    }
+    if (this.timeDisplay) {
+      this.timeDisplay.textContent = "Done!";
+    }
 
     // Play sound
     this.playBeep();
@@ -264,7 +287,13 @@ class RestTimer {
   updateDisplay() {
     const mins = Math.floor(this.remainingSeconds / 60);
     const secs = this.remainingSeconds % 60;
-    this.timeDisplay.textContent = `${mins}:${secs.toString().padStart(2, "0")}`;
+    const timeText = `${mins}:${secs.toString().padStart(2, "0")}`;
+    if (this.timeDisplay) {
+      this.timeDisplay.textContent = timeText;
+    }
+    if (this.headerTimerTime) {
+      this.headerTimerTime.textContent = timeText;
+    }
   }
 }
 

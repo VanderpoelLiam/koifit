@@ -1,12 +1,17 @@
 @layer components {
   /* Page header with logo and title */
   .page-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     display: flex;
     align-items: center;
     gap: var(--space-sm);
     padding: var(--space-md) var(--space-lg);
     background-color: var(--color-bg);
     border-bottom: 1px solid var(--color-border-subtle);
+    z-index: 200;
   }
 
   .page-header__logo {
@@ -30,6 +35,13 @@
     height: 32px;
   }
 
+  .page-header__title-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
   .page-header__title {
     margin: 0;
     font-size: var(--text-xl);
@@ -47,6 +59,15 @@
     padding: var(--space-xl) var(--space-lg);
   }
 
+  /* Calculate header height for padding */
+  .page-header:not(.page-header--hero) {
+    min-height: 57px; /* 32px logo + 16px padding top + 16px padding bottom - 7px for line-height */
+  }
+
+  .page-header--hero {
+    min-height: 88px; /* Larger for hero variant */
+  }
+
   .page-header__title--hero {
     font-size: clamp(1.75rem, 7vw, 2.5rem);
     font-weight: 700;
@@ -54,8 +75,62 @@
     text-transform: uppercase;
   }
 
+  /* Rest timer display in header */
+  .page-header__rest-timer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    flex-shrink: 0;
+    justify-content: flex-end;
+  }
+
+  .page-header__rest-timer[hidden] {
+    display: none; /* Hide completely when not active */
+  }
+
+  .page-header__rest-timer-time {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-ink-muted);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    height: 1.5rem; /* Match font-size */
+    display: flex;
+    align-items: center;
+  }
+
+  .page-header__rest-timer-skip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem; /* Match timer text height */
+    height: 1.5rem; /* Match timer text height */
+    font-size: var(--text-md);
+    color: var(--color-ink-muted);
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
+    padding: 0;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .page-header__rest-timer-skip:hover {
+    background-color: var(--color-bg-subtle);
+    color: var(--color-ink);
+  }
+
   .app-main {
+    padding-top: 57px; /* Space for fixed header */
     padding-bottom: 80px; /* Space for fixed finish button */
+  }
+
+  /* More padding for hero header - check if main contains hero header */
+  main:has(.page-header--hero) {
+    padding-top: 100px;
   }
 
   .app-footer {
