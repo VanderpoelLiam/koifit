@@ -27,3 +27,19 @@ serve:
 # Reset database (purge and reinitialize from schema + seed)
 db-reset:
     uv run python init_db.py
+
+# Build the Docker image
+build:
+    docker compose build
+
+# Start the Docker containers
+up:
+    docker compose up -d
+
+# Stop the Docker containers
+down:
+    docker compose down
+
+# View Docker logs
+logs:
+    docker compose logs -f

@@ -27,22 +27,23 @@ just test      # Run tests
 
 Run `just` to see all available commands.
 
-## Docker
+## Docker Quick Start
 
-### Docker Compose
-
-```shell
-docker compose up --build
-```
-
-This mounts a persistent volume at `/app/db` and sets `KOIFIT_DB_PATH` automatically.
-
-### Docker CLI
+**Prerequisites:** [Docker](https://www.docker.com/) and [just](https://github.com/casey/just).
 
 ```shell
-docker build -t koifit .
-docker run -p 8000:8000 -e KOIFIT_DB_PATH=/app/db/db.sqlite -v koifit_db:/app/db koifit
+# Build and start the application
+just build
+just up
+
+# View logs
+just logs
+
+# Stop the application
+just down
 ```
+
+The application will be available at `http://localhost:8000`. A persistent volume is mounted at `/app/db` and `KOIFIT_DB_PATH` is set automatically.
 
 ## PWA & iOS Timer Notifications
 
