@@ -125,7 +125,6 @@
 
   .app-main {
     padding-top: 57px; /* Space for fixed header */
-    padding-bottom: 80px; /* Space for fixed finish button */
   }
 
   /* More padding for hero header - check if main contains hero header */

@@ -85,15 +85,10 @@
 
   /* Session action buttons container */
   .session-actions {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
     display: flex;
     gap: var(--space-sm);
-    padding: var(--space-sm);
-    z-index: 100;
-    background-color: var(--color-bg);
+    padding: var(--space-md);
+    margin-block-end: var(--space-lg);
   }
 
   /* Finish workout button - prominent action with coral accent */
