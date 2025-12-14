@@ -43,7 +43,59 @@ just logs
 just down
 ```
 
-The application will be available at `http://localhost:8000`. A persistent volume is mounted at `/app/db` and `KOIFIT_DB_PATH` is set automatically.
+The application will be available at `http://localhost:8000`. A persistent volume is mounted at `/app/db.sqlite` and uses the default database path.
+
+## Docker Compose Setup
+
+To run Koifit on your own server using Docker Compose:
+
+1. **Clone the repository** to your server:
+
+   ```shell
+   git clone https://github.com/VanderpoelLiam/koifit
+   cd koifit
+   ```
+
+2. **Add the service to your Docker Compose file**. You can either:
+
+   **Option A: Build from source** (recommended if you want to customize or track changes):
+
+   ```yaml
+   koifit:
+     container_name: koifit
+     build: /path/to/koifit  # Path to the cloned repository
+     ports:
+       - "8000:8000"
+     volumes:
+       - /path/to/db.sqlite:/app/db.sqlite  # Persistent database storage
+   ```
+
+   **Option B: Build the image first**, then use it:
+
+   ```shell
+   cd /path/to/koifit
+   docker build -t koifit:latest .
+   ```
+
+   Then in your compose file:
+
+   ```yaml
+   koifit:
+     container_name: koifit
+     image: koifit:latest
+     ports:
+       - "8000:8000"
+     volumes:
+       - /path/to/db.sqlite:/app/db.sqlite
+   ```
+
+3. **Start the service**:
+
+   ```shell
+   docker compose up -d koifit
+   ```
+
+The default database path is `/app/db.sqlite`. You can override it by setting the `DB_PATH` environment variable if needed.
 
 ## PWA & iOS Timer Notifications
 

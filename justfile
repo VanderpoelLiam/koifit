@@ -41,16 +41,16 @@ db-reset:
 
 # Build the Docker image
 build:
-    docker compose build
+    docker build -t koifit .
 
 # Start the Docker containers
 up:
-    docker compose up -d
+    docker run -d --name koifit -p 8000:8000 -v ./db.sqlite:/app/db.sqlite koifit
 
 # Stop the Docker containers
 down:
-    docker compose down
+    docker stop koifit && docker rm koifit
 
 # View Docker logs
 logs:
-    docker compose logs -f
+    docker logs -f koifit
