@@ -547,6 +547,9 @@ class SessionManager {
       // Wait for all saves to complete
       await Promise.all(savePromises);
 
+      // Stop the rest timer
+      this.restTimer.stop();
+
       // Finish session
       try {
         finishButton.disabled = true;
@@ -605,6 +608,9 @@ class SessionManager {
 
     confirmBtn.addEventListener("click", async () => {
       hideModal();
+
+      // Stop the rest timer
+      this.restTimer.stop();
 
       try {
         discardButton.disabled = true;
