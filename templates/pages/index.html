@@ -1,4 +1,5 @@
 {% extends "layouts/application.html" %}
+{% from "components/cancel_icon.html" import cancel_icon %}
 
 {% block title %}Koifit - Home{% endblock %}
 
@@ -13,7 +14,9 @@
         </div>
         <div class="page-header__rest-timer" id="header-rest-timer" hidden>
             <span class="page-header__rest-timer-time" id="header-rest-timer-time">0:00</span>
-            <button type="button" class="page-header__rest-timer-skip" id="header-rest-timer-skip" aria-label="Skip timer">✕</button>
+            <button type="button" class="page-header__rest-timer-skip" id="header-rest-timer-skip" aria-label="Skip timer">
+                {{ cancel_icon() }}
+            </button>
         </div>
     </header>
     <div class="container">
