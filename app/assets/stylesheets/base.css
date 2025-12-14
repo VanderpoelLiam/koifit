@@ -43,6 +43,13 @@
 
   html {
     font-size: clamp(16px, 4vw, 18px);
+    /* Hide scrollbar for app-like experience */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  html::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
   }
 
   body {
@@ -51,6 +58,13 @@
     line-height: 1.6;
     color: var(--color-ink);
     background-color: var(--color-bg);
+    /* Hide scrollbar for app-like experience */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -102,5 +116,15 @@
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
     border-radius: var(--radius-sm);
+  }
+
+  /* Hide scrollbars globally for app-like experience */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  *::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
   }
 }
