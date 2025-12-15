@@ -67,7 +67,7 @@ To run Koifit on your own server using Docker Compose:
      ports:
        - "8000:8000"
      volumes:
-       - /path/to/db.sqlite:/app/db.sqlite  # Persistent database storage
+       - data:/app  # Persistent app and database storage
    ```
 
    **Option B: Build the image first**, then use it:
@@ -86,7 +86,7 @@ To run Koifit on your own server using Docker Compose:
      ports:
        - "8000:8000"
      volumes:
-       - /path/to/db.sqlite:/app/db.sqlite
+       - data:/app
    ```
 
 3. **Start the service**:
@@ -95,7 +95,6 @@ To run Koifit on your own server using Docker Compose:
    docker compose up -d koifit
    ```
 
-The default database path is `/app/db.sqlite`. You can override it by setting the `DB_PATH` environment variable if needed.
 
 ## PWA & iOS Timer Notifications
 

@@ -45,7 +45,7 @@ build:
 
 # Start the Docker containers
 up:
-    docker run -d --name koifit -p 8000:8000 -v ./db.sqlite:/app/db.sqlite koifit
+    docker run -d --name koifit -p 8000:8000 -v data:/app koifit
 
 # Stop the Docker containers
 down:

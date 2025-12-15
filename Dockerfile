@@ -1,21 +1,15 @@
-FROM python:3.13-slim
+FROM ghcr.io/astral-sh/uv:python3.13-alpine
 
-WORKDIR /app
-
-# Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
-
-# Copy dependency files
-COPY pyproject.toml uv.lock ./
-
-# Install dependencies
-RUN uv sync --frozen --no-dev
-
-# Copy application files
+# Copy the project into the image
 COPY . .
 
-# Create db directory if it doesn't exist
-RUN mkdir -p db
+# Disable development dependencies
+ENV UV_NO_DEV=1
+ENV UV_LINK_MODE=copy
+
+# Sync the project into a new environment, asserting the lockfile is up to date
+WORKDIR /app
+RUN uv sync --locked
 
 # Expose port
 EXPOSE 8000
