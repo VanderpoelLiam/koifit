@@ -67,7 +67,7 @@ To run Koifit on your own server using Docker Compose:
      ports:
        - "8000:8000"
      volumes:
-       - data:/app  # Persistent app and database storage
+       - /path/to/data:/app  # Persistent app and database storage
    ```
 
    **Option B: Build the image first**, then use it:
@@ -86,7 +86,7 @@ To run Koifit on your own server using Docker Compose:
      ports:
        - "8000:8000"
      volumes:
-       - data:/app
+       - /path/to/data:/app
    ```
 
 3. **Start the service**:
@@ -110,14 +110,3 @@ Koifit works as a Progressive Web App (PWA) with background timer notifications 
 6. **Allow notifications** when prompted
 
 Once installed, rest timer notifications will work even when you switch to other apps.
-
-### PWA Requirements
-
-The PWA functionality requires these files:
-
-- `app/assets/manifest.json` - PWA manifest with app metadata
-- `app/assets/sw.js` - Service Worker for background timer notifications
-- `app/assets/images/icon-192.png` - App icon (192x192)
-- `app/assets/images/icon-512.png` - App icon (512x512)
-
-The icons should be PNG files with the Koifit logo on a transparent background.
