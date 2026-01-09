@@ -6,7 +6,7 @@ INSERT INTO exercise (name, min_increment, notes) VALUES
 ('Seated DB Shoulder Press', 2.5, '75-85° bench angle. Bring dumbbells all the way down'),
 ('2-Grip Lat Pulldown', 2.5, 'Use lat bar then easy grip bar. Pull to chest'),
 ('Seated Cable Row', 2.5, 'Squeeze shoulder blades'),
-('Hack Squat', 2.5, 'Foot rest mid position, top all way flat, safety 6. Control weight on way down'),
+('Barbell Squat', 2.5, 'eye gaze slightly down'),
 ('Overhead Cable Triceps Extension', 2.5, 'Both arms at once, resist the negative'),
 ('EZ Bar Curl', 1.25, 'Arc bar ''out'' not ''up'', squeeze biceps'),
 ('Lying Hamstring Curl', 2.5, 'Legs at 3, circle at 2'),
@@ -38,8 +38,8 @@ INSERT INTO slot (day_id, ordinal, title, preferred_exercise_id, warmup_sets, wo
 
 -- Day 2: Lower 1 - Slots
 INSERT INTO slot (day_id, ordinal, title, preferred_exercise_id, warmup_sets, working_sets_count, rep_target, rpe_range, rest_minutes, has_dropset) VALUES
-(2, 1, 'Hack Squat (Heavy)', 5, '2-3', 1, '4-6', '8-9', 3.0, 0),
-(2, 2, 'Hack Squat (Back off)', 5, '0', 1, '8-10', '8-9', 3.0, 0),
+(2, 1, 'Barbell Squat (Heavy)', 5, '2-3', 1, '4-6', '8-9', 3.0, 0),
+(2, 2, 'Barbell Squat (Back off)', 5, '0', 1, '8-10', '8-9', 3.0, 0),
 (2, 3, 'Overhead Cable Triceps Extension', 6, '1', 2, '12-15', '10', 1.5, 0),
 (2, 4, 'EZ Bar Curl', 7, '1', 2, '12-15', '10', 1.5, 0),
 (2, 5, 'Lying Hamstring Curl', 8, '1', 1, '10-12', '10', 1.5, 1);
