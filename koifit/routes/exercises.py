@@ -50,6 +50,7 @@ async def slot_history(slot_id: int, request: Request):
                 "next_time_note": row["next_time_note"],
                 "sets": [],
                 "best_1rm": 0.0,
+                "volume": 0.0,
             }
         weight = row["weight_kg"]
         reps = row["reps"]
@@ -67,6 +68,9 @@ async def slot_history(slot_id: int, request: Request):
             estimated_1rm = weight * (1 + reps / 30.0)
             if estimated_1rm > sessions[sid]["best_1rm"]:
                 sessions[sid]["best_1rm"] = round(estimated_1rm, 1)
+        # Total volume (working sets only)
+        if not is_drop and weight > 0:
+            sessions[sid]["volume"] = round(sessions[sid]["volume"] + weight * reps, 1)
 
     history = list(sessions.values())
 

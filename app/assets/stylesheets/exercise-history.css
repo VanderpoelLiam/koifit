@@ -18,10 +18,28 @@
     text-align: center;
   }
 
-  .history-chart-container h3 {
-    font-size: var(--text-md);
-    font-weight: 500;
+  .history-chart-tabs {
+    display: flex;
+    gap: var(--space-xs);
     margin-block-end: var(--space-sm);
+  }
+
+  .history-chart-tab {
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-ink-muted);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .history-chart-tab--active {
+    background-color: var(--color-accent);
+    color: white;
   }
 
   .history-list {

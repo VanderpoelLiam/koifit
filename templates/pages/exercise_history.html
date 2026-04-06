@@ -25,7 +25,10 @@
         </div>
         {% else %}
         <div class="history-chart-container card">
-            <h3>Estimated 1RM</h3>
+            <div class="history-chart-tabs">
+                <button class="history-chart-tab history-chart-tab--active" data-metric="1rm">1RM</button>
+                <button class="history-chart-tab" data-metric="volume">Volume</button>
+            </div>
             <div class="history-chart-wrapper">
                 <canvas id="history-chart"></canvas>
             </div>

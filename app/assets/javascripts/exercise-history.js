@@ -16,7 +16,6 @@ if (history.length === 0) {
   }
 
   const ctx = document.getElementById("history-chart");
-  const data = history.map((s) => s.best_1rm);
 
   const accentColor = getComputedStyle(document.documentElement)
     .getPropertyValue("--color-accent")
@@ -26,8 +25,23 @@ if (history.length === 0) {
   const lineColor = "oklch(65% 0.02 35)";
   const defaultRadius = 5;
   let selectedIndex = -1;
-  const pointRadii = data.map(() => defaultRadius);
-  const pointBgColors = data.map(() => lineColor);
+  let currentMetric = "1rm";
+
+  const metrics = {
+    "1rm": {
+      data: history.map((s) => s.best_1rm),
+      unit: "kg",
+      labelFn: (v) => v + " kg",
+    },
+    volume: {
+      data: history.map((s) => s.volume),
+      unit: "kg",
+      labelFn: (v) => v + " kg",
+    },
+  };
+
+  const pointRadii = metrics["1rm"].data.map(() => defaultRadius);
+  const pointBgColors = metrics["1rm"].data.map(() => lineColor);
 
   // Plugin to draw tooltip box above selected point
   const selectedLabelPlugin = {
@@ -38,7 +52,9 @@ if (history.length === 0) {
       const point = meta.data[selectedIndex];
       if (!point) return;
       const ctx = chart.ctx;
-      const value = history[selectedIndex].best_1rm + " kg";
+      const value = metrics[currentMetric].labelFn(
+        metrics[currentMetric].data[selectedIndex],
+      );
       ctx.save();
       ctx.font = "600 12px system-ui, sans-serif";
       const textWidth = ctx.measureText(value).width;
@@ -72,14 +88,14 @@ if (history.length === 0) {
       datasets: [
         {
           label: "Est. 1RM (kg)",
-          data,
+          data: metrics["1rm"].data,
           borderColor: lineColor,
           backgroundColor: lineColor,
           pointRadius: pointRadii,
           pointBackgroundColor: pointBgColors,
           pointBorderColor: pointBgColors,
           pointBorderWidth: 0,
-          pointHitRadius: 0,
+          pointHitRadius: 20,
           tension: 0.1,
           fill: false,
         },
@@ -88,7 +104,7 @@ if (history.length === 0) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      events: [], // Disable all chart interactions
+      events: ["click"],
       scales: {
         x: {
           grid: { display: false },
@@ -111,8 +127,49 @@ if (history.length === 0) {
         legend: { display: false },
         tooltip: { enabled: false },
       },
+      onClick: (event) => {
+        const points = chart.getElementsAtEventForMode(
+          event,
+          "nearest",
+          { intersect: false },
+          true,
+        );
+        if (points.length === 0) return;
+        selectSession(points[0].index);
+      },
     },
     plugins: [selectedLabelPlugin],
+  });
+
+  // Metric tab switching
+  const tabs = document.querySelectorAll(".history-chart-tab");
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const metric = tab.dataset.metric;
+      if (metric === currentMetric) return;
+      currentMetric = metric;
+
+      // Update tab styles
+      tabs.forEach((t) => t.classList.remove("history-chart-tab--active"));
+      tab.classList.add("history-chart-tab--active");
+
+      // Update chart data
+      chart.data.datasets[0].data = metrics[metric].data;
+      chart.options.scales.y.title.text = metrics[metric].unit;
+
+      // Re-apply point selection styling
+      if (selectedIndex >= 0) {
+        const ds = chart.data.datasets[0];
+        for (let i = 0; i < history.length; i++) {
+          const selected = i === selectedIndex;
+          ds.pointRadius[i] = selected ? 7 : defaultRadius;
+          ds.pointBackgroundColor[i] = selected ? accent : lineColor;
+          ds.pointBorderColor[i] = selected ? accent : lineColor;
+        }
+      }
+
+      chart.update();
+    });
   });
 
   // Session list (most recent first)
@@ -229,7 +286,7 @@ if (history.length === 0) {
     showDetail(history[index]);
   }
 
-  // Size list to show 5 items
+  // Size list to show 3 items
   if (history.length > 3) {
     const firstItem = listEl.querySelector(".history-session");
     if (firstItem) {
