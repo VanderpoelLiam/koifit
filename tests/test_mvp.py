@@ -144,5 +144,6 @@ async def test_previous_session_data_is_preloaded(client, db_conn):
     second_session_id = await _start_session(client, day_id=1)
     resp = await client.get(f"/sessions/{second_session_id}")
     assert resp.status_code == 200
-    assert "Last time" in resp.text
-    assert "100.0kg × 5 reps" in resp.text
+    assert "History" in resp.text
+    # Previous data should pre-populate weight inputs (slot 1 has 1 working set)
+    assert 'value="100"' in resp.text

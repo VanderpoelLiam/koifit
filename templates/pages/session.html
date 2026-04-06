@@ -31,38 +31,13 @@
                     <span>RPE: {{ se.slot.rpe_range }}</span>
                     {% endif %}
                     <span>Rest: {{ se.slot.rest_minutes|rest_time }}</span>
+                    <a href="/slots/{{ se.slot.id }}/history" class="exercise-card__history-link">History</a>
                 </div>
             </div>
 
             {% if se.slot.exercise_notes %}
             <div class="exercise-card__notes">
                 {{ se.slot.exercise_notes }}
-            </div>
-            {% endif %}
-
-            {% if se.previous %}
-            <div class="exercise-card__previous">
-                <div class="exercise-card__previous-header" onclick="this.nextElementSibling.hidden = !this.nextElementSibling.hidden">
-                    <span class="text-bold">Last time</span>
-                    <span>▼</span>
-                </div>
-                <div class="exercise-card__previous-content" hidden>
-                    {% if se.previous.next_time_note %}
-                    <p class="previous-note">{{ se.previous.next_time_note }}</p>
-                    {% endif %}
-                    {% if se.previous.effort_tag == "increase" %}
-                    <p class="previous-effort previous-effort--increase">↑ Increase weight</p>
-                    {% elif se.previous.effort_tag == "decrease" %}
-                    <p class="previous-effort previous-effort--decrease">↓ Decrease weight</p>
-                    {% endif %}
-                    {% if se.previous.sets %}
-                    <div class="previous-sets">
-                        {% for prev_set in se.previous.sets %}
-                        <span class="previous-set">{{ prev_set.weight_kg|weight }} kg × {{ prev_set.reps }} reps</span>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
             </div>
             {% endif %}
 

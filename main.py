@@ -10,7 +10,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from koifit.db import ensure_database
-from koifit.routes import home_router, sessions_router
+from koifit.routes import exercises_router, home_router, sessions_router
 from koifit.settings import get_db_path
 
 
@@ -36,6 +36,7 @@ def create_app(db_path=None):
     )
 
     app.mount("/assets", StaticFiles(directory="app/assets"), name="assets")
+    app.include_router(exercises_router)
     app.include_router(home_router)
     app.include_router(sessions_router)
 
