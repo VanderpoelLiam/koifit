@@ -1,5 +1,7 @@
 FROM ghcr.io/astral-sh/uv:python3.13-alpine
 
+WORKDIR /app
+
 # Copy the project into the image
 COPY . .
 
@@ -8,7 +10,6 @@ ENV UV_NO_DEV=1
 ENV UV_LINK_MODE=copy
 
 # Sync the project into a new environment, asserting the lockfile is up to date
-WORKDIR /app
 RUN uv sync --locked
 
 # Expose port
