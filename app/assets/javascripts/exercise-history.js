@@ -230,11 +230,11 @@ if (history.length === 0) {
   }
 
   // Size list to show 5 items
-  if (history.length > 5) {
+  if (history.length > 3) {
     const firstItem = listEl.querySelector(".history-session");
     if (firstItem) {
       const itemHeight = firstItem.offsetHeight;
-      listEl.style.maxHeight = itemHeight * 5 + "px";
+      listEl.style.maxHeight = itemHeight * 3 + "px";
     }
   }
 

@@ -95,7 +95,6 @@
   .history-detail {
     padding: var(--space-md);
     margin-block-start: var(--space-md);
-    height: 10rem;
     overflow-y: auto;
   }
 
