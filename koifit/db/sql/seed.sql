@@ -19,7 +19,16 @@ INSERT INTO exercise (name, min_increment, notes) VALUES
 ('Leg Press', 5.0, 'Foot above middle so heel doesn''t raise in bottom. Safety 3, back mid hole'),
 ('DB Incline Curl', 1.25, '38° bench angle. Keep shoulders back as you curl'),
 ('Triceps Pressdown', 2.5, 'Squeeze triceps to move weight'),
-('Leg Extension', 2.5, 'Squeeze quads');
+('Leg Extension', 2.5, 'Squeeze quads'),
+('Barbell Bench Press', 2.5, 'Shoulder blades retracted, bar to lower chest'),
+('Barbell Row', 2.5, 'Torso stable, pull to lower chest, only the bar moves'),
+('Seated Hamstring Curl', 2.5, 'Pad just above the knee, control the negative'),
+('Roman Chair', 1.25, 'Hinge at the hips, neutral spine, no hyperextension at the top'),
+('Lunges', 2.5, 'Long stride, torso upright, drive through the front heel'),
+('Lat Pulldown Machine', 2.5, 'Plate machine version. Runs heavier than the cable pulldown'),
+('Seated Row Machine', 2.5, 'Machine version. Squeeze shoulder blades'),
+('Chest Press Machine', 2.5, 'Machine version. Note the arm/seat position'),
+('Triceps Pressure Machine', 1.0, 'Measured in pressure, not kg. Note which machine and the height setting');
 
 -- Days
 INSERT INTO day (label, ordinal) VALUES

@@ -329,6 +329,21 @@ class SessionManager {
 
     // Setup finish workout button
     this.setupFinishButton();
+
+    // Setup per-session exercise swap
+    this.setupSwapSelects();
+  }
+
+  setupSwapSelects() {
+    // The exercise title is a select; picking a different exercise submits
+    // straight away so there is no separate confirm button to tap.
+    document
+      .querySelectorAll(".exercise-card__title-select")
+      .forEach((select) => {
+        select.addEventListener("change", () => {
+          select.form.submit();
+        });
+      });
   }
 
   setupExerciseCard(card, sessionExerciseId) {

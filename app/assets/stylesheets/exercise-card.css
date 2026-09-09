@@ -45,6 +45,54 @@
     line-height: 1.5;
   }
 
+  /* The title doubles as the swap picker: tap the name, choose another. */
+  .exercise-card__swap-form {
+    display: inline;
+  }
+
+  .exercise-card__title-select {
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    border: none;
+    /* Square, and padded so the highlight fully encloses the text rather than
+       clipping it inside a smaller rounded box. */
+    border-radius: 0;
+    padding: 0.15em 0.25em;
+    margin-inline-start: -0.25em;
+    max-width: 100%;
+    line-height: 1.3;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .exercise-card__title-select:focus,
+  .exercise-card__title-select:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 0;
+    border-radius: 0;
+    background-color: var(--color-bg-subtle);
+  }
+
+  /* Coral marker so a swapped-in exercise is obvious at a glance */
+  .exercise-card__title--swapped .exercise-card__title-select {
+    color: var(--color-accent);
+  }
+
+  .exercise-card__title--swapped::after {
+    content: "⇄";
+    margin-inline-start: 0.35rem;
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+  }
+
+  .exercise-card__title-qualifier {
+    color: var(--color-ink-muted);
+    font-weight: 400;
+  }
+
   /* Previous workout section - collapsible and calm */
   .exercise-card__previous {
     margin-block-end: var(--space-sm);

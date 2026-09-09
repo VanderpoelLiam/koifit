@@ -2,6 +2,7 @@
 Routes for sessions: start, view, autosave, and finish.
 """
 
+import re
 from datetime import date
 
 from fastapi import APIRouter, Request, HTTPException
@@ -15,6 +16,10 @@ from koifit.models import (
 )
 
 router = APIRouter()
+
+# Trailing "(Heavy)" / "(Back off)" style qualifier on a slot title. Kept when
+# an exercise is swapped so the heading still says which slot you are on.
+TITLE_QUALIFIER = re.compile(r"\s*(\([^)]*\))\s*$")
 
 
 @router.post("/sessions/start/{day_id}")
@@ -83,17 +88,22 @@ async def session_page(session_id, request: Request):
     )
     day = await cursor.fetchone()
 
+    # The exercise is resolved per session_exercise, not from the slot, so an
+    # exercise swapped in for today does not touch the underlying program.
     cursor = await db.execute(
         """SELECT s.id, s.ordinal, s.title, s.preferred_exercise_id, s.warmup_sets,
-                  s.working_sets_count, s.rep_target, s.rpe_range, s.rest_minutes, s.has_dropset,
-                  e.name as exercise_name, e.notes as exercise_notes
+                  s.working_sets_count, s.rep_target, s.rpe_range, s.rest_minutes, s.has_dropset
            FROM slot s
-           JOIN exercise e ON s.preferred_exercise_id = e.id
            WHERE s.day_id = ?
            ORDER BY s.ordinal""",
         (session["day_id"],),
     )
     slots = await cursor.fetchall()
+
+    cursor = await db.execute(
+        "SELECT id, name, muscle_group FROM exercise WHERE active = 1 ORDER BY name"
+    )
+    all_exercises = [dict(e) for e in await cursor.fetchall()]
 
     session_exercises = []
     for slot in slots:
@@ -115,11 +125,31 @@ async def session_page(session_id, request: Request):
             se_id = se["id"]
 
         cursor = await db.execute(
-            """SELECT id, effort_tag, next_time_note, dropset_done
+            """SELECT id, effort_tag, next_time_note, dropset_done, exercise_id
                FROM session_exercise WHERE id = ?""",
             (se_id,),
         )
         se_data = await cursor.fetchone()
+
+        exercise_id = se_data["exercise_id"]
+        cursor = await db.execute(
+            "SELECT name, notes, muscle_group FROM exercise WHERE id = ?",
+            (exercise_id,),
+        )
+        exercise = await cursor.fetchone()
+
+        # Only offer substitutes from the same muscle group. If the group is
+        # unknown, offer everything rather than an empty picker.
+        muscle_group = exercise["muscle_group"] if exercise else None
+        if muscle_group:
+            swap_options = [
+                e for e in all_exercises if e["muscle_group"] == muscle_group
+            ]
+        else:
+            swap_options = all_exercises
+
+        qualifier_match = TITLE_QUALIFIER.search(slot["title"])
+        title_qualifier = qualifier_match.group(1) if qualifier_match else None
 
         cursor = await db.execute(
             """SELECT set_number, weight_kg, reps, is_done, is_drop
@@ -136,7 +166,7 @@ async def session_page(session_id, request: Request):
                WHERE se.slot_id = ? AND se.exercise_id = ? AND s.is_finished = 1
                ORDER BY s.date DESC, s.id DESC
                LIMIT 1""",
-            (slot["id"], slot["preferred_exercise_id"]),
+            (slot["id"], exercise_id),
         )
         prev_session = await cursor.fetchone()
 
@@ -155,6 +185,12 @@ async def session_page(session_id, request: Request):
             {
                 "id": se_id,
                 "slot": dict(slot),
+                "exercise_id": exercise_id,
+                "exercise_name": exercise["name"] if exercise else None,
+                "exercise_notes": exercise["notes"] if exercise else None,
+                "is_swapped": exercise_id != slot["preferred_exercise_id"],
+                "swap_options": swap_options,
+                "title_qualifier": title_qualifier,
                 "effort_tag": se_data["effort_tag"] if se_data else None,
                 "next_time_note": se_data["next_time_note"] if se_data else None,
                 "dropset_done": se_data["dropset_done"] if se_data else 0,
@@ -179,6 +215,44 @@ async def session_page(session_id, request: Request):
             session_exercises=session_exercises,
         )
     )
+
+
+@router.post("/sessions/{session_id}/exercises/{session_exercise_id}/swap")
+async def swap_exercise(session_id, session_exercise_id, request: Request):
+    """
+    Swap the exercise for this session only.
+
+    Updates session_exercise.exercise_id, leaving slot.preferred_exercise_id
+    alone, so the program is unchanged next time.
+    """
+    db = request.app.state.db
+
+    cursor = await db.execute(
+        "SELECT id FROM session_exercise WHERE id = ? AND session_id = ?",
+        (session_exercise_id, session_id),
+    )
+    if not await cursor.fetchone():
+        raise HTTPException(status_code=404, detail="Session exercise not found")
+
+    form = await request.form()
+    try:
+        exercise_id = int(form["exercise_id"])
+    except (KeyError, ValueError):
+        raise HTTPException(status_code=400, detail="Invalid exercise_id")
+
+    cursor = await db.execute(
+        "SELECT id FROM exercise WHERE id = ? AND active = 1", (exercise_id,)
+    )
+    if not await cursor.fetchone():
+        raise HTTPException(status_code=400, detail="Unknown exercise")
+
+    await db.execute(
+        "UPDATE session_exercise SET exercise_id = ? WHERE id = ?",
+        (exercise_id, session_exercise_id),
+    )
+    await db.commit()
+
+    return RedirectResponse(url=f"/sessions/{session_id}", status_code=303)
 
 
 @router.post(

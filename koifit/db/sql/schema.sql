@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS exercise (
     name TEXT NOT NULL,
     min_increment REAL NOT NULL,
     active INTEGER NOT NULL DEFAULT 1,
-    notes TEXT
+    notes TEXT,
+    muscle_group TEXT
 );
 
 -- Day table
