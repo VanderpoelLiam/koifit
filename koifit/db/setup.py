@@ -86,6 +86,13 @@ async def apply_migrations(db):
     if "muscle_group" not in columns:
         await db.execute("ALTER TABLE exercise ADD COLUMN muscle_group TEXT")
 
+    cursor = await db.execute("PRAGMA table_info(session_exercise)")
+    columns = {row[1] for row in await cursor.fetchall()}
+    if "working_sets_count" not in columns:
+        await db.execute(
+            "ALTER TABLE session_exercise ADD COLUMN working_sets_count INTEGER"
+        )
+
     # Backfill by name. Only touches rows with no group yet, so a group edited
     # by hand in the database is left alone.
     for group, names in EXERCISE_GROUPS.items():

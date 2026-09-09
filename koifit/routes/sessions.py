@@ -21,6 +21,9 @@ router = APIRouter()
 # an exercise is swapped so the heading still says which slot you are on.
 TITLE_QUALIFIER = re.compile(r"\s*(\([^)]*\))\s*$")
 
+MIN_WORKING_SETS = 1
+MAX_WORKING_SETS = 10
+
 
 @router.post("/sessions/start/{day_id}")
 async def start_session(day_id, request: Request):
@@ -125,11 +128,16 @@ async def session_page(session_id, request: Request):
             se_id = se["id"]
 
         cursor = await db.execute(
-            """SELECT id, effort_tag, next_time_note, dropset_done, exercise_id
+            """SELECT id, effort_tag, next_time_note, dropset_done, exercise_id,
+                      working_sets_count
                FROM session_exercise WHERE id = ?""",
             (se_id,),
         )
         se_data = await cursor.fetchone()
+
+        # NULL means follow the program; a value means sets were added or
+        # dropped for today only.
+        working_sets = se_data["working_sets_count"] or slot["working_sets_count"]
 
         exercise_id = se_data["exercise_id"]
         cursor = await db.execute(
@@ -191,6 +199,8 @@ async def session_page(session_id, request: Request):
                 "is_swapped": exercise_id != slot["preferred_exercise_id"],
                 "swap_options": swap_options,
                 "title_qualifier": title_qualifier,
+                "working_sets": working_sets,
+                "sets_changed": working_sets != slot["working_sets_count"],
                 "effort_tag": se_data["effort_tag"] if se_data else None,
                 "next_time_note": se_data["next_time_note"] if se_data else None,
                 "dropset_done": se_data["dropset_done"] if se_data else 0,
@@ -253,6 +263,58 @@ async def swap_exercise(session_id, session_exercise_id, request: Request):
     await db.commit()
 
     return RedirectResponse(url=f"/sessions/{session_id}", status_code=303)
+
+
+@router.post("/sessions/{session_id}/exercises/{session_exercise_id}/sets")
+async def change_set_count(session_id, session_exercise_id, request: Request):
+    """
+    Add or drop a working set for this session only.
+
+    Writes session_exercise.working_sets_count, leaving the slot alone, so the
+    next workout is back to the programmed number of sets.
+    """
+    db = request.app.state.db
+
+    cursor = await db.execute(
+        """SELECT se.id, se.working_sets_count, s.working_sets_count AS slot_sets
+           FROM session_exercise se
+           JOIN slot s ON se.slot_id = s.id
+           WHERE se.id = ? AND se.session_id = ?""",
+        (session_exercise_id, session_id),
+    )
+    se = await cursor.fetchone()
+    if not se:
+        raise HTTPException(status_code=404, detail="Session exercise not found")
+
+    form = await request.form()
+    delta = {"add": 1, "remove": -1}.get(form.get("action"))
+    if delta is None:
+        raise HTTPException(status_code=400, detail="action must be add or remove")
+
+    current = se["working_sets_count"] or se["slot_sets"]
+    new_count = current + delta
+    if not MIN_WORKING_SETS <= new_count <= MAX_WORKING_SETS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Sets must stay between {MIN_WORKING_SETS} and {MAX_WORKING_SETS}",
+        )
+
+    await db.execute(
+        "UPDATE session_exercise SET working_sets_count = ? WHERE id = ?",
+        (new_count, session_exercise_id),
+    )
+    # Drop entries for sets that no longer exist, so they cannot linger in the
+    # history and volume totals.
+    await db.execute(
+        "DELETE FROM set_entry WHERE session_exercise_id = ? AND set_number > ?",
+        (session_exercise_id, new_count),
+    )
+    await db.commit()
+
+    # Anchor back to the card so the reload does not jump to the top of the page.
+    return RedirectResponse(
+        url=f"/sessions/{session_id}#se-{session_exercise_id}", status_code=303
+    )
 
 
 @router.post(

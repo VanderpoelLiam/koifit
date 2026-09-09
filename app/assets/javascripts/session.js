@@ -349,6 +349,20 @@ class SessionManager {
   setupExerciseCard(card, sessionExerciseId) {
     const autoSave = new AutoSave(this.sessionId, sessionExerciseId);
 
+    // Adding or dropping a set reloads the page, so flush anything still
+    // sitting in the debounce first rather than losing it.
+    card.querySelectorAll(".set-count__form").forEach((form) => {
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        try {
+          await autoSave.saveImmediate(this.collectExerciseData(card, false));
+        } catch (error) {
+          console.error("Save before set change failed:", error);
+        }
+        form.submit();
+      });
+    });
+
     // Setup weight/reps inputs (debounced 1s)
     const weightInputs = card.querySelectorAll(".set-weight");
     const repsInputs = card.querySelectorAll(".set-reps");

@@ -1,4 +1,62 @@
 @layer components {
+  /* Faint trailing row for adding a set to today's session only */
+  .set-row--add {
+    border-bottom: none;
+  }
+
+  .set-add__cell {
+    text-align: left;
+    padding: 0;
+  }
+
+  .set-add__form {
+    display: block;
+  }
+
+  .set-add__btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    width: 100%;
+    min-height: 36px;
+    /* Flush left so the + lines up with the edge of the table */
+    padding: var(--space-xs) var(--space-xs) var(--space-xs) 0;
+    font-size: var(--text-sm);
+    font-family: inherit;
+    color: var(--color-ink-muted);
+    background: none;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    /* Reset so iOS does not render the label in its default blue */
+    appearance: none;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .set-add__plus {
+    font-size: var(--text-md);
+    line-height: 1;
+  }
+
+  .set-add__remove {
+    min-height: 36px;
+    min-width: 36px;
+    padding: 0;
+    font-size: var(--text-md);
+    line-height: 1;
+    font-family: inherit;
+    color: var(--color-ink-muted);
+    background: none;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+
   .set-table {
     width: 100%;
     border-collapse: collapse;

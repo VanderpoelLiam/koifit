@@ -53,6 +53,9 @@ CREATE TABLE IF NOT EXISTS session_exercise (
     effort_tag TEXT,
     next_time_note TEXT,
     dropset_done INTEGER NOT NULL DEFAULT 0,
+    -- Per-session override for slot.working_sets_count. NULL means follow the
+    -- program; a value means sets were added or dropped for this session only.
+    working_sets_count INTEGER,
     FOREIGN KEY (session_id) REFERENCES session(id),
     FOREIGN KEY (slot_id) REFERENCES slot(id),
     FOREIGN KEY (exercise_id) REFERENCES exercise(id)

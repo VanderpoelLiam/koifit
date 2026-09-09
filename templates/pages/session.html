@@ -22,7 +22,7 @@
 
     <div class="session-exercises">
         {% for se in session_exercises %}
-        <div class="exercise-card card" data-session-exercise-id="{{ se.id }}" data-rest-seconds="{{ (se.slot.rest_minutes * 60)|int }}" data-has-dropset="{{ se.slot.has_dropset }}" data-working-sets="{{ se.slot.working_sets_count }}">
+        <div class="exercise-card card" id="se-{{ se.id }}" data-session-exercise-id="{{ se.id }}" data-rest-seconds="{{ (se.slot.rest_minutes * 60)|int }}" data-has-dropset="{{ se.slot.has_dropset }}" data-working-sets="{{ se.working_sets }}">
             <div class="exercise-card__header">
                 <h2 class="exercise-card__title{% if se.is_swapped %} exercise-card__title--swapped{% endif %}">
                     <form class="exercise-card__swap-form" action="/sessions/{{ session.id }}/exercises/{{ se.id }}/swap" method="post">
@@ -72,7 +72,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for set_num in range(1, se.slot.working_sets_count + 1) %}
+                        {% for set_num in range(1, se.working_sets + 1) %}
                         {% set existing_set = se.sets | selectattr("set_number", "equalto", set_num) | first %}
                         <tr class="set-row">
                             <td class="set-table__number" data-label="Set">{{ set_num }}</td>
@@ -103,6 +103,24 @@
                             </td>
                         </tr>
                         {% endfor %}
+                        <tr class="set-row set-row--add">
+                            <td class="set-add__cell" colspan="3">
+                                <form class="set-add__form" action="/sessions/{{ session.id }}/exercises/{{ se.id }}/sets" method="post">
+                                    <input type="hidden" name="action" value="add">
+                                    <button type="submit" class="set-add__btn">
+                                        <span class="set-add__plus" aria-hidden="true">+</span> Add set
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="set-table__done">
+                                {% if se.sets_changed %}
+                                <form class="set-add__form" action="/sessions/{{ session.id }}/exercises/{{ se.id }}/sets" method="post">
+                                    <input type="hidden" name="action" value="remove">
+                                    <button type="submit" class="set-add__remove" aria-label="Remove the last set">−</button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
