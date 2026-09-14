@@ -120,6 +120,20 @@ async def apply_migrations(db):
             "ALTER TABLE session_exercise ADD COLUMN working_sets_count INTEGER"
         )
 
+    # The squat exercise was recorded as "Hack Squat" but the work was always
+    # barbell squats, so this is a mislabelling rather than a different lift and
+    # the existing history carries over. Guarded so it cannot collide with an
+    # existing Barbell Squat row, and a no-op once renamed.
+    await db.execute(
+        """UPDATE exercise SET name = 'Barbell Squat'
+           WHERE name = 'Hack Squat'
+             AND NOT EXISTS (SELECT 1 FROM exercise WHERE name = 'Barbell Squat')"""
+    )
+    await db.execute(
+        """UPDATE slot SET title = REPLACE(title, 'Hack Squat', 'Barbell Squat')
+           WHERE title LIKE 'Hack Squat%'"""
+    )
+
     # Insert by name if absent. Retiring one of these is done by setting
     # active = 0 rather than deleting it, so the row survives and is not
     # recreated here on the next startup.
