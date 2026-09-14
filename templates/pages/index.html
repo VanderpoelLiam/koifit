@@ -36,7 +36,7 @@
             <div class="day-list">
                 {% for day in days %}
                 <form action="/sessions/start/{{ day.id }}" method="post">
-                    <button type="submit" class="day-item">
+                    <button type="submit" class="day-item{% if day.id == next_day_id %} day-item--next{% endif %}"{% if day.id == next_day_id %} aria-current="true"{% endif %}>
                         {{ day.label }}
                     </button>
                 </form>

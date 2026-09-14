@@ -10,6 +10,35 @@ from koifit.templates import templates
 router = APIRouter()
 
 
+async def get_next_day_id(db):
+    """
+    The day due next: the one after the most recently dated finished session,
+    wrapping back to the first. Falls back to the first day if nothing is
+    finished yet.
+    """
+    cursor = await db.execute("SELECT id, ordinal FROM day ORDER BY ordinal")
+    days = await cursor.fetchall()
+    if not days:
+        return None
+
+    cursor = await db.execute(
+        """SELECT d.ordinal
+           FROM session s
+           JOIN day d ON s.day_id = d.id
+           WHERE s.is_finished = 1
+           ORDER BY s.date DESC, s.id DESC
+           LIMIT 1"""
+    )
+    last = await cursor.fetchone()
+    if not last:
+        return days[0]["id"]
+
+    for day in days:
+        if day["ordinal"] > last["ordinal"]:
+            return day["id"]
+    return days[0]["id"]
+
+
 @router.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     """Home page - shows resume option or day selection."""
@@ -40,6 +69,7 @@ async def home(request: Request):
         template.render(
             has_unfinished_session=False,
             days=[dict(day) for day in days],
+            next_day_id=await get_next_day_id(db),
         )
     )
 
@@ -51,4 +81,9 @@ async def days_page(request: Request):
     cursor = await db.execute("SELECT id, label, ordinal FROM day ORDER BY ordinal")
     days = await cursor.fetchall()
     template = templates.get_template("pages/days.html")
-    return HTMLResponse(template.render(days=[dict(day) for day in days]))
+    return HTMLResponse(
+        template.render(
+            days=[dict(day) for day in days],
+            next_day_id=await get_next_day_id(db),
+        )
+    )

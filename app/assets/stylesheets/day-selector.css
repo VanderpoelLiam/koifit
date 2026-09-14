@@ -28,6 +28,13 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* The day due next, following the last finished session cyclically */
+  .day-item--next {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    background-color: color-mix(in oklch, var(--color-accent) 6%, var(--color-bg));
+  }
+
   .day-item:hover {
     border-color: var(--color-accent);
     background-color: var(--color-bg-subtle);
