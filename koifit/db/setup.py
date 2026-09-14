@@ -58,6 +58,33 @@ EXERCISE_GROUPS = {
     ],
 }
 
+# Exercises added after the original seed. seed.sql only runs for a database
+# that does not exist yet, so these are inserted by a migration instead and
+# reach existing databases too. Keyed by name, which is how they are matched.
+ADDED_EXERCISES = [
+    ("Barbell Bench Press", 2.5, "Shoulder blades retracted, bar to lower chest"),
+    ("Barbell Row", 2.5, "Torso stable, pull to lower chest, only the bar moves"),
+    ("Seated Hamstring Curl", 2.5, "Pad just above the knee, control the negative"),
+    (
+        "Roman Chair",
+        1.25,
+        "Hinge at the hips, neutral spine, no hyperextension at the top",
+    ),
+    ("Lunges", 2.5, "Long stride, torso upright, drive through the front heel"),
+    (
+        "Lat Pulldown Machine",
+        2.5,
+        "Plate machine version. Runs heavier than the cable pulldown",
+    ),
+    ("Seated Row Machine", 2.5, "Machine version. Squeeze shoulder blades"),
+    ("Chest Press Machine", 2.5, "Machine version. Note the arm/seat position"),
+    (
+        "Triceps Pressure Machine",
+        1.0,
+        "Measured in pressure, not kg. Note which machine and the height setting",
+    ),
+]
+
 
 async def apply_schema(db):
     """Apply the SQL schema from db/schema.sql."""
@@ -91,6 +118,17 @@ async def apply_migrations(db):
     if "working_sets_count" not in columns:
         await db.execute(
             "ALTER TABLE session_exercise ADD COLUMN working_sets_count INTEGER"
+        )
+
+    # Insert by name if absent. Retiring one of these is done by setting
+    # active = 0 rather than deleting it, so the row survives and is not
+    # recreated here on the next startup.
+    for name, min_increment, notes in ADDED_EXERCISES:
+        await db.execute(
+            """INSERT INTO exercise (name, min_increment, notes)
+               SELECT ?, ?, ?
+               WHERE NOT EXISTS (SELECT 1 FROM exercise WHERE name = ?)""",
+            (name, min_increment, notes, name),
         )
 
     # Backfill by name. Only touches rows with no group yet, so a group edited
