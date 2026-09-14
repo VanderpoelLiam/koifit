@@ -2,7 +2,19 @@
 Shared Jinja2 environment.
 """
 
+import re
+
 from jinja2 import Environment, FileSystemLoader
+
+# Trailing "(Heavy)" / "(Back off)" style qualifier on a slot title. Kept when an
+# exercise is swapped so the heading still says which slot you are on.
+TITLE_QUALIFIER = re.compile(r"\s*(\([^)]*\))\s*$")
+
+
+def title_qualifier(slot_title: str) -> str | None:
+    """Return the trailing "(Heavy)" style qualifier on a slot title, if any."""
+    match = TITLE_QUALIFIER.search(slot_title)
+    return match.group(1) if match else None
 
 
 def format_rest_time(minutes: float) -> str:
@@ -48,4 +60,4 @@ templates.filters["rest_time"] = format_rest_time
 templates.filters["weight"] = format_weight
 templates.filters["warmup_sets"] = format_warmup_sets
 
-__all__ = ["templates"]
+__all__ = ["templates", "title_qualifier"]

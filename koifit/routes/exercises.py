@@ -7,14 +7,19 @@ import json
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
 
-from koifit.templates import templates
+from koifit.templates import templates, title_qualifier
 
 router = APIRouter()
 
 
 @router.get("/slots/{slot_id}/history", response_class=HTMLResponse)
-async def slot_history(slot_id: int, request: Request):
-    """Slot history page with 1RM chart."""
+async def slot_history(slot_id: int, request: Request, exercise_id: int | None = None):
+    """
+    History page with 1RM chart for one exercise in one slot.
+
+    Scoped to the exercise as well as the slot, so an exercise swapped in for a
+    session keeps its own progression instead of joining the slot's line.
+    """
     db = request.app.state.db
 
     cursor = await db.execute(
@@ -24,7 +29,20 @@ async def slot_history(slot_id: int, request: Request):
     if not slot:
         raise HTTPException(status_code=404, detail="Slot not found")
 
-    # Get all finished sessions for this slot, along with their sets
+    if exercise_id is None:
+        exercise_id = slot["preferred_exercise_id"]
+
+    cursor = await db.execute("SELECT name FROM exercise WHERE id = ?", (exercise_id,))
+    exercise = await cursor.fetchone()
+    if not exercise:
+        raise HTTPException(status_code=404, detail="Exercise not found")
+
+    # Title the page after the exercise, keeping any "(Heavy)" / "(Back off)"
+    # qualifier so the two slots sharing an exercise stay distinguishable.
+    qualifier = title_qualifier(slot["title"])
+    title = f"{exercise['name']} {qualifier}" if qualifier else exercise["name"]
+
+    # Get all finished sessions for this exercise in this slot, with their sets
     cursor = await db.execute(
         """SELECT s.id as session_id, s.date,
                   se.id as se_id, se.effort_tag, se.next_time_note,
@@ -32,9 +50,10 @@ async def slot_history(slot_id: int, request: Request):
            FROM session_exercise se
            JOIN session s ON se.session_id = s.id
            JOIN set_entry st ON st.session_exercise_id = se.id
-           WHERE se.slot_id = ? AND s.is_finished = 1 AND st.is_done = 1
+           WHERE se.slot_id = ? AND se.exercise_id = ?
+                 AND s.is_finished = 1 AND st.is_done = 1
            ORDER BY s.date ASC, s.id ASC, st.set_number ASC""",
-        (slot_id,),
+        (slot_id, exercise_id),
     )
     rows = await cursor.fetchall()
 
@@ -77,7 +96,7 @@ async def slot_history(slot_id: int, request: Request):
     template = templates.get_template("pages/exercise_history.html")
     return HTMLResponse(
         template.render(
-            slot_title=slot["title"],
+            slot_title=title,
             history_json=json.dumps(history),
         )
     )

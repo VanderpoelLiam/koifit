@@ -42,7 +42,7 @@
                     <span>RPE: {{ se.slot.rpe_range }}</span>
                     {% endif %}
                     <span>Rest: {{ se.slot.rest_minutes|rest_time }}</span>
-                    <a href="/slots/{{ se.slot.id }}/history" class="exercise-card__history-link">History</a>
+                    <a href="/slots/{{ se.slot.id }}/history?exercise_id={{ se.exercise_id }}" class="exercise-card__history-link">History</a>
                 </div>
             </div>
 

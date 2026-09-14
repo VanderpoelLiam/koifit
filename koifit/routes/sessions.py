@@ -2,13 +2,12 @@
 Routes for sessions: start, view, autosave, and finish.
 """
 
-import re
 from datetime import date
 
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 
-from koifit.templates import templates
+from koifit.templates import templates, title_qualifier
 from koifit.models import (
     FinishSessionResponse,
     SaveExerciseRequest,
@@ -16,10 +15,6 @@ from koifit.models import (
 )
 
 router = APIRouter()
-
-# Trailing "(Heavy)" / "(Back off)" style qualifier on a slot title. Kept when
-# an exercise is swapped so the heading still says which slot you are on.
-TITLE_QUALIFIER = re.compile(r"\s*(\([^)]*\))\s*$")
 
 MIN_WORKING_SETS = 1
 MAX_WORKING_SETS = 10
@@ -156,8 +151,7 @@ async def session_page(session_id, request: Request):
         else:
             swap_options = all_exercises
 
-        qualifier_match = TITLE_QUALIFIER.search(slot["title"])
-        title_qualifier = qualifier_match.group(1) if qualifier_match else None
+        qualifier = title_qualifier(slot["title"])
 
         cursor = await db.execute(
             """SELECT set_number, weight_kg, reps, is_done, is_drop
@@ -198,7 +192,7 @@ async def session_page(session_id, request: Request):
                 "exercise_notes": exercise["notes"] if exercise else None,
                 "is_swapped": exercise_id != slot["preferred_exercise_id"],
                 "swap_options": swap_options,
-                "title_qualifier": title_qualifier,
+                "title_qualifier": qualifier,
                 "working_sets": working_sets,
                 "sets_changed": working_sets != slot["working_sets_count"],
                 "effort_tag": se_data["effort_tag"] if se_data else None,
