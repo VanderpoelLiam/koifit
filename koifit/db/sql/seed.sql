@@ -1,28 +1,36 @@
 -- Koifit Workout Tracker Seed Data
 
 -- Exercises
-INSERT INTO exercise (name, min_increment, notes) VALUES
-('Flat DB Press', 2.5, 'Tuck chin a little'),
-('Seated DB Shoulder Press', 2.5, '75-85° bench angle. Bring dumbbells all the way down'),
-('2-Grip Lat Pulldown', 2.5, 'Use lat bar then easy grip bar. Pull to chest'),
-('Seated Cable Row', 2.5, 'Squeeze shoulder blades'),
-('Barbell Squat', 2.5, 'eye gaze slightly down'),
-('Overhead Cable Triceps Extension', 2.5, 'Both arms at once, resist the negative'),
-('EZ Bar Curl', 1.25, 'Arc bar ''out'' not ''up'', squeeze biceps'),
-('Lying Hamstring Curl', 2.5, 'Legs at 3, circle at 2'),
-('Pendlay Row', 2.5, 'Squeeze shoulder blades, pull to lower chest'),
-('Machine Shoulder Press', 2.5, 'Smooth controlled tension, no stopping'),
-('Weighted Pullup', 1.25, 'Pull elbows down and in, minimize swinging'),
-('Cable Chest Press', 2.5, 'Squeeze chest'),
-('DB Lateral Raise', 1.25, 'Raise ''out'' not ''up'''),
-('Romanian Deadlift', 2.5, 'Neutral lower back, hips back, no rounding'),
-('Leg Press', 5.0, 'Foot above middle so heel doesn''t raise in bottom. Safety 3, back mid hole'),
-('DB Incline Curl', 1.25, '38° bench angle. Keep shoulders back as you curl'),
-('Triceps Pressdown', 2.5, 'Squeeze triceps to move weight'),
-('Leg Extension', 2.5, 'Squeeze quads');
-
--- Exercises added later live in ADDED_EXERCISES in koifit/db/setup.py and are
--- inserted by apply_migrations, so they reach existing databases too.
+INSERT INTO exercise (name, min_increment, muscle_group, notes) VALUES
+('Flat DB Press', 2.5, 'Chest', 'Tuck chin a little'),
+('Seated DB Shoulder Press', 2.5, 'Shoulders', '75-85° bench angle. Bring dumbbells all the way down'),
+('Lat Pulldown', 2.5, 'Back', 'Use lat bar then easy grip bar. Pull to chest'),
+('Seated Cable Row', 2.5, 'Back', 'Squeeze shoulder blades'),
+('Barbell Squat', 2.5, 'Quads', 'Foot rest mid position, top all way flat, safety 6. Control weight on way down'),
+('Overhead Cable Triceps Extension (BRA)', 2.5, 'Triceps', 'Both arms at once, resist the negative'),
+('EZ Bar Curl', 1.25, 'Biceps', 'Arc bar ''out'' not ''up'', squeeze biceps'),
+('Lying Hamstring Curl', 2.5, 'Hamstrings', 'Legs at 3, circle at 2'),
+('Pendlay Row', 2.5, 'Back', 'Squeeze shoulder blades, pull to lower chest'),
+('Machine Shoulder Press', 2.5, 'Shoulders', 'Smooth controlled tension, no stopping'),
+('Weighted Pullup', 1.25, 'Back', 'Pull elbows down and in, minimize swinging'),
+('Cable Chest Press', 2.5, 'Chest', 'Squeeze chest'),
+('DB Lateral Raise', 1.25, 'Shoulders', 'Raise ''out'' not ''up'''),
+('Romanian Deadlift', 2.5, 'Hamstrings', 'Neutral lower back, hips back, no rounding'),
+('Leg Press', 5.0, 'Quads', 'Foot above middle so heel doesn''t raise in bottom. Safety 3, back mid hole'),
+('DB Incline Curl', 1.25, 'Biceps', '38° bench angle. Keep shoulders back as you curl'),
+('Triceps Pressdown (BRA)', 2.5, 'Triceps', 'Squeeze triceps to move weight'),
+('Leg Extension', 2.5, 'Quads', 'Squeeze quads'),
+('Barbell Bench Press', 2.5, 'Chest', 'Shoulder blades retracted, bar to lower chest'),
+('Barbell Row', 2.5, 'Back', 'Torso stable, pull to lower chest, only the bar moves'),
+('Seated Hamstring Curl', 2.5, 'Hamstrings', 'Pad just above the knee, control the negative'),
+('Roman Chair', 1.25, 'Hamstrings', 'Hinge at the hips, neutral spine, no hyperextension at the top'),
+('Lunges', 2.5, 'Quads', 'Long stride, torso upright, drive through the front heel'),
+('Lat Pulldown Machine', 2.5, 'Back', 'Plate machine version. Runs heavier than the cable pulldown'),
+('Seated Row Machine', 2.5, 'Back', 'Machine version. Squeeze shoulder blades'),
+('Chest Press Machine', 2.5, 'Chest', 'Machine version. Note the arm/seat position'),
+('Dumbbell Cable Curl', 2.5, 'Biceps', 'Elbows pinned to your sides, squeeze biceps'),
+('Overhead Cable Triceps Extension (EUR)', 1.0, 'Triceps', 'Measured in pressure, not kg. Both arms at once, resist the negative'),
+('Triceps Pressdown (EUR)', 1.0, 'Triceps', 'Measured in pressure, not kg. Squeeze triceps to move weight');
 
 -- Days
 INSERT INTO day (label, ordinal) VALUES
@@ -31,20 +39,23 @@ INSERT INTO day (label, ordinal) VALUES
 ('Upper 2', 3),
 ('Lower 2', 4);
 
+-- Slot titles leave off a "(BRA)" / "(EUR)" suffix, since a trailing
+-- parenthetical is read as a "(Heavy)" style qualifier.
+
 -- Day 1: Upper 1 - Slots
 INSERT INTO slot (day_id, ordinal, title, preferred_exercise_id, warmup_sets, working_sets_count, rep_target, rpe_range, rest_minutes, has_dropset) VALUES
-(1, 1, 'Flat DB Press (Heavy)', 1, '2-3', 1, '4-6', '8-9', 3.0, 0),
-(1, 2, 'Flat DB Press (Back off)', 1, '0', 1, '8-10', '9-10', 3.0, 0),
+(1, 1, 'Barbell Bench Press (Heavy)', 19, '2-3', 1, '4-6', '8-9', 3.0, 0),
+(1, 2, 'Barbell Bench Press (Back off)', 19, '0', 1, '8-10', '9-10', 3.0, 0),
 (1, 3, 'Seated DB Shoulder Press', 2, '1', 2, '10-12', '9-10', 2.0, 0),
-(1, 4, '2-Grip Lat Pulldown', 3, '2', 2, '10-12', '9-10', 2.0, 0),
-(1, 5, 'Seated Cable Row', 4, '1', 2, '10-12', '9-10', 2.0, 1);
+(1, 4, 'Lat Pulldown', 3, '2', 2, '10-12', '9-10', 2.0, 0),
+(1, 5, 'Roman Chair', 22, '1', 2, '10-12', '9-10', 2.0, 1);
 
 -- Day 2: Lower 1 - Slots
 INSERT INTO slot (day_id, ordinal, title, preferred_exercise_id, warmup_sets, working_sets_count, rep_target, rpe_range, rest_minutes, has_dropset) VALUES
 (2, 1, 'Barbell Squat (Heavy)', 5, '2-3', 1, '4-6', '8-9', 3.0, 0),
 (2, 2, 'Barbell Squat (Back off)', 5, '0', 1, '8-10', '8-9', 3.0, 0),
-(2, 3, 'Overhead Cable Triceps Extension', 6, '1', 2, '12-15', '10', 1.5, 0),
-(2, 4, 'EZ Bar Curl', 7, '1', 2, '12-15', '10', 1.5, 0),
+(2, 3, 'Overhead Cable Triceps Extension', 28, '1', 2, '12-15', '10', 1.5, 0),
+(2, 4, 'Dumbbell Cable Curl', 27, '1', 2, '12-15', '10', 1.5, 0),
 (2, 5, 'Lying Hamstring Curl', 8, '1', 1, '10-12', '10', 1.5, 1);
 
 -- Day 3: Upper 2 - Slots
@@ -52,7 +63,7 @@ INSERT INTO slot (day_id, ordinal, title, preferred_exercise_id, warmup_sets, wo
 (3, 1, 'Pendlay Row', 9, '2', 2, '8-10', '9-10', 2.0, 0),
 (3, 2, 'Machine Shoulder Press', 10, '2', 2, '10-12', '9-10', 2.0, 0),
 (3, 3, 'Weighted Pullup', 11, '1', 2, '8-10', '9-10', 2.0, 0),
-(3, 4, 'Cable Chest Press', 12, '2', 2, '10-12', '9-10', 2.0, 1),
+(3, 4, 'Chest Press Machine', 26, '2', 2, '10-12', '9-10', 2.0, 1),
 (3, 5, 'DB Lateral Raise', 13, '1', 1, '12-15', '10', 1.5, 1);
 
 -- Day 4: Lower 2 - Slots
@@ -60,5 +71,5 @@ INSERT INTO slot (day_id, ordinal, title, preferred_exercise_id, warmup_sets, wo
 (4, 1, 'Romanian Deadlift', 14, '2', 2, '10-12', '8-9', 2.0, 0),
 (4, 2, 'Leg Press', 15, '2', 3, '10-12', '8-9', 2.0, 0),
 (4, 3, 'DB Incline Curl', 16, '1', 2, '12-15', '10', 1.5, 0),
-(4, 4, 'Triceps Pressdown', 17, '1', 2, '12-15', '10', 1.5, 0),
+(4, 4, 'Triceps Pressdown', 29, '1', 2, '12-15', '10', 1.5, 0),
 (4, 5, 'Leg Extension', 18, '1', 1, '10-12', '9-10', 1.5, 1);

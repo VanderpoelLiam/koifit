@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from koifit.db import apply_migrations, ensure_database
+from koifit.db import ensure_database
 from koifit.routes import exercises_router, home_router, sessions_router
 from koifit.settings import get_db_path
 
@@ -26,7 +26,6 @@ def create_app(db_path=None):
         # Create a single shared database connection for single-user app
         app.state.db = await aiosqlite.connect(str(resolved_db_path))
         app.state.db.row_factory = aiosqlite.Row
-        await apply_migrations(app.state.db)
         yield
         await app.state.db.close()
 
